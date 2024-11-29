@@ -1,0 +1,17 @@
+@import "./nav.scss";
+@import "./hero.scss";
+@import "./contact.scss";
+@import "./about.scss";
+@import "./portfo.scss";
+.contenair_app{
+    // background-image: url("../../images/ia-react-nlp.jpg");
+    background-repeat: repeat;
+    // background-size: cover;
+    backdrop-filter: blur(175px) !important;
+    height: 100vh;
+    .filtre_app{
+        background-color: rgba(0, 0, 0, 0.867);
+        backdrop-filter: blur(2px);
+        height: 100vh;
+    }
+}

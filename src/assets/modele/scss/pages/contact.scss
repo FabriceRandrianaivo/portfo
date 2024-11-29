@@ -1,0 +1,38 @@
+.contact {
+    padding: 2rem;
+    background: #000;
+    color: #fff;
+  
+    h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+  
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      width: 80%;
+      margin: 0 10%;
+  
+      input,
+      textarea {
+        padding: 1rem;
+        border: none;
+        border-radius: 5px;
+        background: #333;
+        color: #fff;
+      }
+  
+      button {
+        padding: 1rem;
+        background: #00ff00;
+        border: none;
+        border-radius: 5px;
+        color: #000;
+        cursor: pointer;
+        font-weight: bold;
+      }
+    }
+  }
+  
