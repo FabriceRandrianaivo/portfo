@@ -9,7 +9,7 @@ const MailService = () => {
     reply_to: '',
   });
 
-  const onSubmit = (e) => {
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     emailjs.send(
       'YOUR_SERVICE_ID',
@@ -25,7 +25,7 @@ const MailService = () => {
     });
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setToSend({ ...toSend, [e.target.name]: e.target.value });
   };
 

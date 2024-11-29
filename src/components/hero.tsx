@@ -3,9 +3,9 @@ import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 import { motion } from "framer-motion";
 import me from "../assets/modele/ia-rm.png";
-import About from "../pages/about";
-import Portfolio from "../pages/portfo";
-import Contact from "../pages/contact";
+// import About from "../pages/about";
+// import Portfolio from "../pages/portfo";
+// import Contact from "../pages/contact";
 const Hero: React.FC = () => {
   const particlesInit = async (main: any) => {
     await loadFull(main);
