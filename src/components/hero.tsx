@@ -80,7 +80,7 @@ const Hero: React.FC = () => {
 
       </section>
 
-      <section id="about" className="about">
+      {/* <section id="about" className="about">
         <div className="about-content">
           <h2>About Me</h2>
           <p>
@@ -127,7 +127,7 @@ const Hero: React.FC = () => {
           />
           <button type="submit">Send</button>
         </form>
-      </section>
+      </section> */}
 
     </div>
   );

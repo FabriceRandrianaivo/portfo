@@ -1,34 +1,44 @@
-// import { Link } from "react-router-dom"
+import { useEffect, useState } from "react";
+import HomeIcon from '@mui/icons-material/Home';
+import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
+import InfoIcon from '@mui/icons-material/Info';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import LightModeIcon from '@mui/icons-material/LightMode';
+import { useNavigate } from "react-router-dom";
 
-const TopHeader = () => {
-
-    // return (
-    //     <div className="top-header">
-    //         <div className="top-header_inner">
-    //             <div className="name_user">Fabrice Randrianaivo</div>
-    //             <div className="nav_menu">
-    //                 <Link to="/home">Home</Link>
-    //                 <Link to="/about">About</Link>
-    //                 <Link to="/contact">Contact</Link>
-    //                 <Link to="/login">Login</Link>
-    //                 <Link to="/register">Register</Link>
-    //             </div>
-    //         </div>
-    //     </div>
-
-    // )
-    return (
-        <header className="header">
-          <nav>
-            <ul>
-              <li><a href="#hero">Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#portfolio">Portfolio</a></li>
-              <li><a href="#contact">Contact</a></li>
-            </ul>
-          </nav>
-        </header>
-      );
+interface headerType {
+  theme: boolean;
+  setTheme: (theme: boolean) => void;
 }
 
-export default TopHeader
+const TopHeader = (props: headerType) => {
+  const [isDarkTheme, setIsDarkTheme] = useState<boolean>(props.theme);
+  const navigate = useNavigate();
+  const isHome = location.pathname.startsWith("/home");
+  useEffect(() => {
+    setIsDarkTheme(props.theme);
+  }, [props.theme]);
+
+  const toggleTheme = () => {
+    const newTheme = !isDarkTheme;
+    setIsDarkTheme(newTheme);
+    props.setTheme(newTheme);
+  };
+
+  return (
+    <header className="header">
+      <nav>
+        <ul>
+          <li onClick={()=> navigate("/home")} className={isHome ? "active": ""}><HomeIcon fontSize="medium" className="navIcons"/></li>
+          <li onClick={()=> navigate("/about")}><InfoIcon fontSize="medium"className="navIcons"/></li>
+          <li onClick={()=> navigate("/project")}><AccountTreeIcon fontSize="medium" className="navIcons"/></li>
+          <li onClick={()=> navigate("/contact")}><PermContactCalendarIcon fontSize="medium" className="navIcons"/></li>
+          <li onClick={toggleTheme}>{isDarkTheme? <LightModeIcon/>: <Brightness4Icon/>}</li>
+        </ul>
+      </nav>
+    </header>
+  );
+};
+
+export default TopHeader;

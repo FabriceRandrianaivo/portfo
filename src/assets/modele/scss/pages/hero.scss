@@ -1,60 +1,66 @@
-// .home-container{
-//   padding: 0 10%;
-//   background: ;
-// }
-
-
 .hero {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background: #000;
-    color: #fff;
-    padding: 10%;
-    gap: 2rem;
-  
-    .hero-content {
-      text-align: center;
-  
-      h1 {
-        font-size: 3rem;
-        span {
-          color: #0f0;
-        }
-      }
-  
-      p {
-        font-size: 1.5rem;
-        margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  padding: 5%;
+  gap: 2rem;
+  flex-direction: column; // Par défaut pour les petits écrans
+
+  .hero-content {
+    text-align: center;
+
+    h1 {
+      font-size: 2rem; // Taille réduite pour les petits écrans
+      span {
+        color: #0f0;
       }
     }
-    .hero-image-container{
-      width: 500px;
-      .hero-image{
-        width: 100%;
-      }
+
+    p {
+      font-size: 1rem; // Taille réduite pour les petits écrans
+      margin-top: 1rem;
     }
   }
-  
-  // .hero {
-  //   position: relative;
-  //   height: 100vh;
-  //   background: url("../assets/modele/1.jpg") no-repeat center center/cover;
-  //   display: flex;
-  //   flex-direction: column;
-  //   justify-content: center;
-  //   align-items: center;
-  //   color: white;
-  //   text-align: center;
-  
-  //   .hero-content {
-  //     position: relative;
-  //     z-index: 2;
-  //   }
-  // }
-  
-  // .hero .hero-image {
-  //   display: none; // L'image dans <img> ne sera plus nécessaire
-  // }
-  
+
+  .hero-image-container {
+    width: 80%; // Largeur réduite pour s'adapter à l'écran
+    max-width: 400px; // Limite de largeur pour les grands écrans
+
+    .hero-image {
+      width: 100%;
+    }
+  }
+
+  // Media queries pour les écrans plus larges
+  @media (min-width: 768px) {
+    flex-direction: row; // Retour à une disposition en ligne
+    padding: 10%;
+
+    .hero-content {
+      h1 {
+        font-size: 3rem;
+      }
+      p {
+        font-size: 1.5rem;
+      }
+    }
+    .hero-image-container {
+      width: 500px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-content {
+      h1 {
+        font-size: 4rem;
+      }
+      p {
+        font-size: 2rem;
+      }
+    }
+    .hero-image-container {
+      width: 600px;
+    }
+  }
+}

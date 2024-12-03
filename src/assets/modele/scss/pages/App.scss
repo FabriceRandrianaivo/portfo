@@ -3,6 +3,9 @@
 @import "./contact.scss";
 @import "./about.scss";
 @import "./portfo.scss";
+@import "./theme.scss";
+
+
 .contenair_app{
     // background-image: url("../../images/ia-react-nlp.jpg");
     background-repeat: repeat;
@@ -15,3 +18,54 @@
         height: 100vh;
     }
 }
+
+// Classe pour le thème clair
+.theme-light {
+    background-color: $light-background;
+    color: $light-text-color;
+    li a {
+        color: $light-text-color;
+    }
+    .nav{
+        
+    }
+    .hero{
+
+    }
+    .about{
+
+    }
+    .contact{
+
+    }
+    .project{
+
+    }
+  }
+  
+  // Classe pour le thème sombre
+  .theme-dark {
+    background-color: $dark-background;
+    color: $dark-text-color;
+    li a {
+        color: $dark-text-color;
+    }
+  }
+
+  .not-fund{
+    display: flex;
+    flex-direction: column;
+    font-style: oblique;
+    height: 100vh;
+    width: 100wh;
+    text-align: center;
+    align-items: center;
+    color: orangered;
+    justify-content: center;
+    p{
+        font-size: 5rem;
+    }
+    .iconsNotFund{
+        font-size: 10rem;
+    }
+  }

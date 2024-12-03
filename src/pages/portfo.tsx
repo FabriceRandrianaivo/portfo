@@ -1,32 +1,58 @@
-import React from "react";
-import img1 from "../assets/modele/1.jpg";
-import img2 from "../assets/modele/2.jpg";
-import img3 from "../assets/modele/3.jpg";
-import img4 from "../assets/modele/4.jpg";
+import React, { useState } from 'react';
+import { experimentalStyled as styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
 
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(2),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+  cursor: 'pointer',
+  ...theme.applyStyles('dark', {
+    backgroundColor: '#1A2027',
+  }),
+}));
 
-const projects = [
-  { id: 1, title: "Project One", image:  img1},
-  { id: 2, title: "Project Two", image:  img2},
-  { id: 3, title: "Project Three", image: img3},
-  { id: 4, title: "Project four", image: img4 },
-  { id: 5, title: "Project five", image:  img3},
-  { id: 6, title: "Project six", image: img2 },
-];
+const project = ["project1", "project2", "project3", "project4", "project5", "project6"];
 
 const Portfolio: React.FC = () => {
+  const [isItemClicked, setIsItemClicked] = useState(true);
+
+  const handleClick = () => {
+    setIsItemClicked(!isItemClicked);
+  };
+
   return (
-    <section className="portfolio">
-      <h2>My Projects</h2>
-      <div className="portfolio-grid">
-        {projects.map((project) => (
-          <div key={project.id} className="portfolio-item">
-            <img src={project.image} alt={project.title} />
-            <h3>{project.title}</h3>
-          </div>
-        ))}
+    <div className={`contenair-project`}>
+      <div className='title'>Project</div>
+      <div className={`container-all ${isItemClicked ? 'reduced' : ''}`}> 
+        <Box sx={{ flexGrow: 1 }}>
+          <Grid 
+            container 
+            spacing={{ xs: 2, md: 3 }} 
+            columns={{ xs: 4, sm: 8, md: 12 }}
+            direction={isItemClicked ? 'column' : 'row'}
+            justifyContent={isItemClicked ? 'flex-start' : 'center'}
+          >
+            {project.map((item, index) => (
+              <Grid 
+                item 
+                xs={2} 
+                sm={4} 
+                md={4} 
+                key={index} 
+                onClick={handleClick}
+              >
+                <Item>{item}</Item>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
       </div>
-    </section>
+    </div>
   );
 };
 

@@ -1,0 +1,13 @@
+// src/styles/themes.scss
+
+// Thème clair
+$light-background: #ffffff;
+$light-text-color: #000000;
+
+// Thème sombre
+$dark-background: #000000;
+$dark-text-color: #ffffff;
+
+// Thème par défaut
+$theme-background: $light-background;
+$theme-text-color: $light-text-color;

@@ -1,69 +1,9 @@
-// .top-header{
-//     // background-color: hsla(0, 0%, 80%, 0.4);
-//     position: absolute;
-//     top:0;
-//     height: 50px;
-//     width: 100%;
-//     .top-header_inner{
-//         display: flex;
-//         .name_user{
-//             width: 60%;
-//             text-align:start;
-//             height: 50px;
-//             padding: 10px;
-//         }  
-//         .nav_menu{
-//             width: 40%;
-//             text-align:center;
-//             height: 50px;
-//             padding: 10px;
-//             a{
-//                 justify-items: center;
-//                 justify-content: space-around;
-//                 text-decoration: none;
-//                 margin: 0 5%;  
-//             }
-//         }
-//     }
-// }
-
-
-// .left-header{
-    
-//     position: absolute;
-//     left: 0;
-//     width: 50px;
-//     height: 100vh;
-//     display:inline ; 
-//     background: #000;
-//     flex-direction: row;
-//     .left-header_inner{
-       
-//         // display: flex;
-//         // flex-direction: row;
-//         // .nav_menu_left{
-//         //     // width: 40%;
-//         //     text-align:center;
-//         //     padding: 10px;
-//         //     // display: flex;
-//         //     // flex-direction: row;
-//         //     a{
-//         //         justify-items: center;
-//         //         justify-content: space-around;
-//         //         text-decoration: none;
-//         //         margin: 0 5%;  
-//         //     }
-//         // }
-//     }
-// }
-
 
 .header {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    background: rgba(0, 0, 0, 0.8);
     z-index: 1000;
     padding: 1rem;
   
@@ -75,12 +15,19 @@
   
       li a {
         text-decoration: none;
-        color: white;
-        font-weight: bold;
+        font-weight: thin;
+        cursor: pointer;
         &:hover {
           color: #00ff00;
         }
       }
     }
+  }
+
+  .navIcons{
+    cursor: pointer;
+        &:hover {
+          color: #00ff00;
+        }
   }
   

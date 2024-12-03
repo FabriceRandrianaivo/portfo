@@ -33,4 +33,40 @@
       }
     }
   }
+
+.contenair-project{
+  padding: 5rem 2rem 0 2rem;
+  width: 100vw;
+  width: 100%;
+  transition: width 0.3s ease;
+  height: auto;
+  .title{
+    font-size: large;
+    text-align: center;
+    font-size: 3rem;
+    margin: 1rem;
+
+  }
+  .container-all{
+    background: blue;
+    padding: 2%;
+    width: 100%;
+    transition: all 0.3s ease;
+    display: flexbox;
+    gap: 10px;
+  }
+}
+
+
+
+.reduced {
+  width: 25% !important;
+}
+
+
+.container-all .MuiGrid-container {
+  flex-direction: column !important;
+  align-items: flex-start;
+}
+
   
