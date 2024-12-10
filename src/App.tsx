@@ -35,7 +35,7 @@ const App: React.FC = () => {
         <TopHeader theme={isDarkTheme} setTheme={setIsDarkTheme} />
       </header>
       <Routes>
-        <Route path="/" element={<Hero />} />
+        <Route path="/portfo" element={<Hero />} />
         <Route path="/project" element={<Project />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
