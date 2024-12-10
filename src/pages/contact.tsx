@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import aboutImage from "../assets/modele/1.jpg";
 
 interface ContactForm {
   name: string;
@@ -24,30 +25,36 @@ const Contact: React.FC = () => {
 
   return (
     <section className="contact">
-      <h2>Contact Me</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          value={form.name}
-          onChange={handleChange}
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={handleChange}
-        />
-        <textarea
-          name="message"
-          placeholder="Message"
-          value={form.message}
-          onChange={handleChange}
-        />
-        <button type="submit">Send</button>
-      </form>
+      <div className="contact-image">
+        <img src={aboutImage} alt="Contact" />
+      </div>
+      <div className="contact-info">
+        <h2>Contact Me</h2>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="name"
+            placeholder="Name"
+            value={form.name}
+            onChange={handleChange}
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={handleChange}
+          />
+          <textarea
+            name="message"
+            placeholder="Message"
+            value={form.message}
+            onChange={handleChange}
+          />
+          <button type="submit">Send</button>
+        </form>
+      </div>
+
     </section>
   );
 };

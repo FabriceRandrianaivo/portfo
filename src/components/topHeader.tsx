@@ -34,7 +34,7 @@ const TopHeader = (props: headerType) => {
           <li onClick={()=> navigate("/about")}><InfoIcon fontSize="medium"className="navIcons"/></li>
           <li onClick={()=> navigate("/project")}><AccountTreeIcon fontSize="medium" className="navIcons"/></li>
           <li onClick={()=> navigate("/contact")}><PermContactCalendarIcon fontSize="medium" className="navIcons"/></li>
-          <li onClick={toggleTheme}>{isDarkTheme? <LightModeIcon/>: <Brightness4Icon/>}</li>
+          <li onClick={toggleTheme} >{isDarkTheme? <LightModeIcon cursor="pointer"/>: <Brightness4Icon cursor="pointer"/>}</li>
         </ul>
       </nav>
     </header>
