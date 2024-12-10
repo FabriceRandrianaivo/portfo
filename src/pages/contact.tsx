@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import aboutImage from "../assets/modele/1.jpg";
+import MaintenancePage from "./maintenance";
 
 interface ContactForm {
   name: string;
@@ -25,7 +26,7 @@ const Contact: React.FC = () => {
 
   return (
     <section className="contact">
-      <div className="contact-image">
+      {/* <div className="contact-image">
         <img src={aboutImage} alt="Contact" />
       </div>
       <div className="contact-info">
@@ -53,8 +54,8 @@ const Contact: React.FC = () => {
           />
           <button type="submit">Send</button>
         </form>
-      </div>
-
+      </div> */}
+      <MaintenancePage/>
     </section>
   );
 };

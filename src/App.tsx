@@ -12,6 +12,7 @@ import About from "./pages/about";
 import Project from "./pages/portfo";
 import Contact from "./pages/contact";
 import NotFund from "./pages/notFund"
+import SocialMediaLinks from './components/navReseau';
 
 const App: React.FC = () => {
   const [isDarkTheme, setIsDarkTheme] = useState<boolean>(true);
@@ -33,10 +34,11 @@ const App: React.FC = () => {
     <Router>
       <header>
         <TopHeader theme={isDarkTheme} setTheme={setIsDarkTheme} />
+        <SocialMediaLinks/>
       </header>
       <Routes>
-        <Route path="/portfo" element={<Hero />} />
-        <Route path="/project" element={<Project />} />
+        <Route path="/" element={<Hero/>} />
+        <Route path="/project" element={<Project theme={isDarkTheme} />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="*" element={<NotFund/>} />

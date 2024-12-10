@@ -16,6 +16,12 @@
         color: #0f0;
       }
     }
+    h2 {
+      font-size: 2rem; // Taille réduite pour les petits écrans
+      span , b{
+        color: rgb(0, 179, 255);
+      }
+    }
 
     p {
       font-size: 1rem; // Taille réduite pour les petits écrans

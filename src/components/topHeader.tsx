@@ -30,7 +30,7 @@ const TopHeader = (props: headerType) => {
     <header className="header">
       <nav>
         <ul>
-          <li onClick={()=> navigate("/home")} className={isHome ? "active": ""}><HomeIcon fontSize="medium" className="navIcons"/></li>
+          <li onClick={()=> navigate("/")} className={isHome ? "active": ""}><HomeIcon fontSize="medium" className="navIcons"/></li>
           <li onClick={()=> navigate("/about")}><InfoIcon fontSize="medium"className="navIcons"/></li>
           <li onClick={()=> navigate("/project")}><AccountTreeIcon fontSize="medium" className="navIcons"/></li>
           <li onClick={()=> navigate("/contact")}><PermContactCalendarIcon fontSize="medium" className="navIcons"/></li>

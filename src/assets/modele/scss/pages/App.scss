@@ -1,9 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 @import "./nav.scss";
 @import "./hero.scss";
 @import "./contact.scss";
 @import "./about.scss";
 @import "./portfo.scss";
 @import "./theme.scss";
+@import "./maintenance.scss";
 
 
 .contenair_app{
