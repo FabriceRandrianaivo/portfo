@@ -31,3 +31,44 @@
         }
   }
   
+
+
+
+
+  // ***************************** Left Bar *****************************//
+
+
+
+  .social-media-links {
+    position: fixed;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  .social-media-links ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .social-media-links li {
+    margin: 10px 0;
+    cursor: pointer;
+  }
+  
+  .social-icon {
+    color: white;
+    transition: color 0.3s ease;
+  }
+  
+  .social-icon:hover {
+    color: #4caf50; /* Change to any hover color */
+  }
+  

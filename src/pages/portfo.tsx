@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
+
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -15,43 +16,100 @@ const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: '#1A2027',
   }),
 }));
+const projects = [
+  { name: "Project 1", details: "Details about Project 1" },
+  { name: "Project 2", details: "Details about Project 2" },
+  { name: "Project 3", details: "Details about Project 3" },
+  { name: "Project 4", details: "Details about Project 4" },
+  { name: "Project 5", details: "Details about Project 5" },
+  { name: "Project 6", details: "Details about Project 6" },
+  { name: "Project 6", details: "Details about Project 6" },
+  { name: "Project 6", details: "Details about Project 6" },
+  { name: "Project 6", details: "Details about Project 6" },
+  { name: "Project 6", details: "Details about Project 6" },
+  { name: "Project 6", details: "Details about Project 6" },
+];
+interface headerType {
+  theme: boolean;
+  // setTheme: (theme: boolean) => void;
+}
+const Portfolio = (props: headerType) => {
+  const [selectedProject, setSelectedProject] = useState<string | null>(null);
 
-const project = ["project1", "project2", "project3", "project4", "project5", "project6"];
-
-const Portfolio: React.FC = () => {
-  const [isItemClicked, setIsItemClicked] = useState(true);
-
-  const handleClick = () => {
-    setIsItemClicked(!isItemClicked);
+  const handleClick = (projectName: string) => {
+    setSelectedProject(projectName);
   };
-
   return (
     <div className={`contenair-project`}>
-      <div className='title'>Project</div>
-      <div className={`container-all ${isItemClicked ? 'reduced' : ''}`}> 
-        <Box sx={{ flexGrow: 1 }}>
-          <Grid 
-            container 
-            spacing={{ xs: 2, md: 3 }} 
-            columns={{ xs: 4, sm: 8, md: 12 }}
-            direction={isItemClicked ? 'column' : 'row'}
-            justifyContent={isItemClicked ? 'flex-start' : 'center'}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          height: "100vh",
+        }}
+      >
+        {/* Liste des projets */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection:"column",
+            flexGrow: 1,
+            width: selectedProject ? "30%" : "100%",
+            transition: "width 0.5s ease",
+            p: 5,
+          }}
+        >
+          <div className='title'>Project</div>
+          <Grid
+            container
+            spacing={2}
+            sx={{
+              overflow: "auto", // Active le défilement
+              "&::-webkit-scrollbar": { display: "none" }, // Cache la barre de défilement sur Webkit (Chrome, Safari, etc.)
+              scrollbarWidth: "none", // Cache la barre de défilement sur Firefox
+            }}
+            // direction={selectedProject ? "column" : "row"}
           >
-            {project.map((item, index) => (
-              <Grid 
-                item 
-                xs={2} 
-                sm={4} 
-                md={4} 
-                key={index} 
-                onClick={handleClick}
-              >
-                <Item>{item}</Item>
-              </Grid>
-            ))}
+              {projects.map((project, index) => (
+                <Grid
+                  item
+                  xs={selectedProject ? 12 : 4}
+                  key={index}
+                  onClick={() => handleClick(project.name)}
+                  sx={{
+                    cursor: "pointer",
+                    transition: "transform 0.3s",
+                    "&:hover": { transform: "scale(0.9)" },
+                  }}
+                >
+                  <Item>{project.name}</Item>
+                </Grid>
+              ))}
           </Grid>
         </Box>
-      </div>
+
+        {/* Détails du projet */}
+        {selectedProject && (
+          <Box
+            sx={{
+              width: "70%",
+              transition: "width 0.5s ease",
+              backgroundColor: "#1a202c",
+              padding: "2rem",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <h2>{selectedProject}</h2>
+            <p>
+              {projects.find((project) => project.name === selectedProject)
+                ?.details || "No details available"}
+            </p>
+          </Box>
+        )}
+      </Box>
     </div>
   );
 };

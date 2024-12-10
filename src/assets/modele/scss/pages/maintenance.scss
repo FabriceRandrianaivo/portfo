@@ -1,0 +1,80 @@
+/* Style pour la page de maintenance */
+.maintenance-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  .animate-bounces {
+    display: flex;
+    text-align: center;
+    height: 100%;
+    flex: 1;
+    width: 100%;
+    // animation: bounce 2s infinite;
+    .table-layout {
+        // display: flex;
+        tbody {
+        //   background: #1d4ed8;
+        width: 100%;
+        height: auto;
+        .cell {
+          padding: 1rem;
+          .text-center {
+            text-align: center;
+            .heading {
+              margin-top: 2rem;
+              font-size: 2rem;
+              font-weight: bold;
+            }
+            .message {
+              margin-top: 1rem;
+              font-size: 1.2rem;
+            }
+
+            .thank-you {
+              margin-top: 0.5rem;
+            }
+
+            h1 {
+              font-size: 2rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Styles responsive */
+@media (max-width: 768px) {
+  .maintenance-container {
+    padding: 1rem; /* Ajout de padding sur les petits écrans */
+    .animate-bounces {
+      table {
+        width: 100%; /* Le tableau prend toute la largeur sur les petits écrans */
+        text-align: center;
+      }
+
+      .heading {
+        font-size: 1.5rem; /* Taille de police réduite sur les petits écrans */
+      }
+
+      .message,
+      .thank-you {
+        font-size: 1rem; /* Taille de police plus petite sur les petits écrans */
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .heading {
+    font-size: 1.25rem; /* Réduction de la taille de police sur les très petits écrans */
+  }
+
+  .message,
+  .thank-you {
+    font-size: 0.9rem; /* Taille de police réduite pour les très petits écrans */
+  }
+}

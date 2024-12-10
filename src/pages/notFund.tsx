@@ -4,7 +4,7 @@ const NotFundPage = () =>{
 return(
     <div className="not-fund">
         <MoodBadIcon className='iconsNotFund'/>
-        <p>Not fund</p>
+        <p>Not found</p>
     </div>
 );
 }

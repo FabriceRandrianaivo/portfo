@@ -71,7 +71,10 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0, y: -50 }} // L'état initial avant animation
           animate={{ opacity: 1, y: 0 }} // L'état final après animation
           transition={{ duration: 3 }} // La durée de l'animation
-        >
+        > 
+          <h2>
+            I'am <b>Fabrice</b><span> Randrianaivo</span>
+          </h2>
           <h1>
             FullStack <span>Developer</span>
           </h1>

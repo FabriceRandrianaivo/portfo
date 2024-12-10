@@ -1,72 +1,100 @@
-.portfolio {
-    padding: 2rem;
-    background: #000;
-    // color: #fff;
-    h2 {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-  
-    .portfolio-grid {
-      margin: 5%;
-      width: 80%;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 5rem;
-  
-      .portfolio-item {
-        background: #fff;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  
-        img {
-          width: 100%;
-          height: auto;
-        }
-  
-        h3 {
-          text-align: center;
-          padding: 1rem;
-          font-size: 1.2rem;
-        }
-      }
-    }
-  }
-
-.contenair-project{
-  padding: 5rem 2rem 0 2rem;
-  width: 100vw;
+/* Conteneur principal */
+.contenair-project {
+  // padding: 0 2rem; 
   width: 100%;
-  transition: width 0.3s ease;
-  height: auto;
-  .title{
-    font-size: large;
-    text-align: center;
-    font-size: 3rem;
-    margin: 1rem;
-
-  }
-  .container-all{
-    background: blue;
-    padding: 2%;
-    width: 100%;
-    transition: all 0.3s ease;
-    display: flexbox;
-    gap: 10px;
-  }
+  // background: linear-gradient(to bottom right, #1a202c, #2d3748);
+  font-family: Arial, sans-serif;
+  transition: all 0.3s ease-in-out;
+  overflow: hidden;
 }
 
+/* Titre principal */
+.contenair-project .title {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #edf2f7;
+}
 
+/* Conteneur des projets */
+.container-all {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2rem;
+  border-radius: 12px;
+  transition: all 0.5s ease-in-out;
+}
 
+/* Animation lors du changement d'état */
 .reduced {
-  width: 25% !important;
+  width: 50%;
+  margin: 0 auto;
+}
+
+.no_reduced {
+  width: 100%;
+}
+
+/* Élément Grid */
+.grid-item {
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.grid-item:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Styles pour les cartes */
+.MuiPaper-root {
+  background: linear-gradient(145deg, #edf2f7, #e2e8f0);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #cbd5e0;
+  transition: all 0.3s ease-in-out;
+}
+
+.MuiPaper-root:hover {
+  background: linear-gradient(145deg, #e2e8f0, #edf2f7);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .contenair-project {
+    padding: 0 1rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .container-all {
+    padding: 1rem;
+  }
+
+  .grid-item {
+    width: 100%;
+  }
 }
 
 
-.container-all .MuiGrid-container {
-  flex-direction: column !important;
-  align-items: flex-start;
+.list_projet{
+  background: blue;
+  display: flex;
+  overflow: hidden;
+  transition: width 0.5s ease;
+  overflow: auto;
+  gap: 2;
+  justify-content: space-between;
 }
 
-  
+
+/* Conteneur des projets */
+.MuiPaper-root {
+  background: linear-gradient(145deg, #edf2f7, #e2e8f0);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #cbd5e0;
+  transition: all 0.3s ease-in-out;
+}
+
+.MuiPaper-root:hover {
+  background: linear-gradient(145deg, #e2e8f0, #edf2f7);
+}
