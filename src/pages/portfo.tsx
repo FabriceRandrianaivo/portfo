@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -34,7 +34,6 @@ interface headerType {
   // setTheme: (theme: boolean) => void;
 }
 const Portfolio = (props: headerType) => {
-  const [isItemClicked, setIsItemClicked] = useState(true);
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
 
   const handleClick = (projectName: string) => {
@@ -42,14 +41,11 @@ const Portfolio = (props: headerType) => {
   };
   return (
     <div className={`contenair-project`}>
-      {/* <div className={`container-all ${isItemClicked ? "reduced" : ""}`}> */}
       <Box
         sx={{
           display: "flex",
           flexDirection: "row",
           height: "100vh",
-          // background: props.theme?"linear-gradient(to bottom right, #1a202c, #2d3748)":"",
-          // color: "#fff",
         }}
       >
         {/* Liste des projets */}
@@ -57,7 +53,6 @@ const Portfolio = (props: headerType) => {
           sx={{
             display: "flex",
             flexDirection:"column",
-            // height: "100%",
             flexGrow: 1,
             width: selectedProject ? "30%" : "100%",
             transition: "width 0.5s ease",
@@ -75,8 +70,6 @@ const Portfolio = (props: headerType) => {
             }}
             // direction={selectedProject ? "column" : "row"}
           >
-            {/* <div className='list-content'> */}
-            {/* <div className='list_projet'> */}
               {projects.map((project, index) => (
                 <Grid
                   item
@@ -92,9 +85,6 @@ const Portfolio = (props: headerType) => {
                   <Item>{project.name}</Item>
                 </Grid>
               ))}
-
-            {/* </div> */}
-            {/* </div> */}
           </Grid>
         </Box>
 
@@ -120,7 +110,6 @@ const Portfolio = (props: headerType) => {
           </Box>
         )}
       </Box>
-      {/* </div> */}
     </div>
   );
 };
