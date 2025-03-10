@@ -3,25 +3,25 @@ import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 import { motion } from "framer-motion";
 import me from "../assets/modele/ia-rm.png";
-import About from "../pages/about";
-import aboutImage from "../assets/modele/1.jpg";
-import Portfolio from "../pages/portfo";
-import Contact from "../pages/contact";
+// import About from "../pages/about";
+// import aboutImage from "../assets/modele/1.jpg";
+// import Portfolio from "../pages/portfo";
+// import Contact from "../pages/contact";
 
-import img1 from "../assets/modele/1.jpg";
-import img2 from "../assets/modele/2.jpg";
-import img3 from "../assets/modele/3.jpg";
-import img4 from "../assets/modele/4.jpg";
+// import img1 from "../assets/modele/1.jpg";
+// import img2 from "../assets/modele/2.jpg";
+// import img3 from "../assets/modele/3.jpg";
+// import img4 from "../assets/modele/4.jpg";
 
-const projects = [
-  { id: 1, title: "Project One", image: img1 },
-  { id: 2, title: "Project Two", image: img2 },
-  { id: 3, title: "Project Three", image: img3 },
-  { id: 4, title: "Project four", image: img4 },
-  { id: 5, title: "Project five", image: img3 },
-  { id: 6, title: "Project six", image: img2 },
+// const projects = [
+//   { id: 1, title: "Project One", image: img1 },
+//   { id: 2, title: "Project Two", image: img2 },
+//   { id: 3, title: "Project Three", image: img3 },
+//   { id: 4, title: "Project four", image: img4 },
+//   { id: 5, title: "Project five", image: img3 },
+//   { id: 6, title: "Project six", image: img2 },
 
-];
+// ];
 
 interface ContactForm {
   name: string;

@@ -3,13 +3,19 @@ import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-
+import LogoMyAux from "../assets/modele/images/logo_.png";
+import LogoJupiter from "../assets/modele/images/Jupiter-logo.jpeg";
+import LogoFoodStack from "../assets/modele/images/food-track.png"
+import LogoEvoyazy from "../assets/modele/images/e-voyazy.png"
+import { Card, CardContent, CardMedia, Chip, Typography } from '@mui/material';
 
 const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: '#fff',
+  backgroundColor: theme.palette.mode === "dark"
+    ? "#1A2027" : "#fff",
   ...theme.typography.body2,
   padding: theme.spacing(2),
   textAlign: 'center',
+  // width:"60%",
   color: theme.palette.text.secondary,
   cursor: 'pointer',
   ...theme.applyStyles('dark', {
@@ -18,59 +24,80 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 const projects = [
   {
-    // year: 2023,
+    year: 2025,
+    name: "IntelliDetect",
+    company: "Project of study",
+    description:"Detection object IA in video streaming,",
+    // progress: "In Progress",
+    technologies: ["React", "TypeScript", "Redux", "Bootstrap", "Sass", "MUI", "PostgreSQL", "Python", "FastAPI", "Docker", "Yolo v8s","IPWebCam","Postman"],
+    link: ["myAuxilium.ai", "app.myauxilium.ai"],
+    img: LogoMyAux,
+    post: ["Lead project, Backend Developer and Developer IA (Data Scientist)"],
+  },
+  {
+    year: 2024,
+    name: "Jupiter myAux",
+    company: "Constellation Group",
+    // progress: "In Progress",
+    technologies: ["NextJS", "TypeScript", "Tailwind", "Redux", "Sass", "PostgreSQL", "Python", "FastAPI", "Docker",],
+    link: ["JupiterMyAux.app"],
+    img: LogoJupiter,
+    post: ["Lead Tech Developer Frontend (React) of project"],
+  },
+  {
+    year: 2024,
+    name: "NER and Topic Modeling ",
+    company: "Constellation Group",
+    description:"Boost performance of chat with docs",
+    // progress: "In Progress",
+    technologies: ["NLP","Name Entity Recognitive","Topics Modeling","Python","Bert Model Base uncased ","LDA Model","JupiterNoteBook","PostgreSQL", "FastAPI", "Postman"],
+    link: ["myAuxilium.ai", "app.myauxilium.ai"],
+    img: LogoMyAux,
+    post: ["Data Scientist"],
+  },
+  {
+    year: 2024,
     name: "myAuxilium",
     company: "Constellation Group",
+    description:"App chat with doc, chat with professor IA, chat with Team in Society ,collection doc and session chat",
     // progress: "In Progress",
-    technologies: ["React", "TypeScript","Redux", "Bootstrap", "Sass", "MUI", "PostgreSQL", "Python", "FastAPI", "Docker","Open IA"],
-    link: "myAuxilium.ai",
+    technologies: ["React", "TypeScript", "Redux", "Bootstrap", "Sass", "MUI", "PostgreSQL", "Python", "FastAPI", "Docker", "Open IA"],
+    link: ["myAuxilium.ai", "app.myauxilium.ai"],
+    img: LogoMyAux,
+    post: ["Lead Tech Developer Frontend (React) of project"],
   },
   {
-    // year: 2023,
-    name: "Jupiter muAux",
-    company: "Constellation Group",
-    // progress: "In Progress",
-    technologies: ["NextJS","TypeScript" ,"Tailwind", "Rdeux", "Sass",  "PostgreSQL", "Python", "FastAPI", "Docker",],
-    link: "twisales.com",
-  },
-  {
-    // year: 2023,
-    name: "Adherent",
-    company: "Constellation Group",
+    year: 2023,
+    name: "Food Track",
+    company: "Project of study",
     // progress: "Completed",
-    technologies: ["Vue", "Nuxt", "Sass", "TypeScript", "Vuetify", "Strapi", "Nest", "MongoDB"],
-    link: "adherent.ostie.mg",
+    technologies: ["Html5", "Css3", "Bootstrap", "JavaScript", "Vue", "NodeJs", "MongoDB"],
+    link: ["github.com/FabriceRandrianaivo"],
+    img: LogoFoodStack,
+    post: ["Lead of project"],
   },
   {
-    // year: 2023,
-    name: "Central Care",
-    company: "Constellation Group",
+    year: 2022,
+    name: "E-voyage",
+    company: "Project of study",
     // progress: "In Progress",
-    technologies: ["Vue", "Nuxt", "TypeScript", "Nubra UI", "Sass", "Nest", "MongoDB"],
-    link: "centralcare.ostie.mg",
+    technologies: ["Java", "XML", "Android Studio", "SQLite"],
+    link: ["github.com/FabriceRandrianaivo"],
+    img: LogoEvoyazy,
+    post: ["Frontend Developer"]
   },
   {
-    // year: 2023,
-    name: "Affilie",
-    company: "Constellation Group",
+    year: 2021,
+    name: "Save Password",
+    company: "Project personnel",
     // progress: "Completed",
-    technologies: ["Vue", "Nuxt", "TypeScript", "Sass", "Vuetify", "Strapi", "Nest", "MongoDB"],
-    link: "affilie.ostie.mg",
+    technologies: ["HTML5", "CSS", "PHP", "MySql", "Wamp Server",],
+    link: ["github.com/FabriceRandrianaivo/SavePassword-1.0-2021"],
+    img: "",
+    post: ["Lead of project"],
   },
 ];
-// const projects = [
-//   { name: "myAuxilium", details: "Details about Project 1" },
-//   { name: "Project 2", details: "Details about Project 2" },
-//   { name: "Project 3", details: "Details about Project 3" },
-//   { name: "Project 4", details: "Details about Project 4" },
-//   { name: "Project 5", details: "Details about Project 5" },
-//   { name: "Project 6", details: "Details about Project 6" },
-//   { name: "Project 6", details: "Details about Project 6" },
-//   { name: "Project 6", details: "Details about Project 6" },
-//   { name: "Project 6", details: "Details about Project 6" },
-//   { name: "Project 6", details: "Details about Project 6" },
-//   { name: "Project 6", details: "Details about Project 6" },
-// ];
+
 interface headerType {
   theme: boolean;
   // setTheme: (theme: boolean) => void;
@@ -96,19 +123,20 @@ const Portfolio = (props: headerType) => {
             display: "flex",
             flexDirection: "column",
             flexGrow: 1,
-            width: selectedProject ? "30%" : "100%",
+            width: selectedProject ? "20%" : "100%",
             transition: "width 0.5s ease",
             p: 5,
           }}
         >
-          <div className='title'>Project</div>
+          <h1 className='title'>Projects</h1>
           <Grid
             container
             spacing={2}
             sx={{
+              pl:3,
               overflow: "auto", // Active le défilement
               "&::-webkit-scrollbar": { display: "none" }, // Cache la barre de défilement sur Webkit (Chrome, Safari, etc.)
-              scrollbarWidth: "none", // Cache la barre de défilement sur Firefox
+              scrollbarWidth: "thin ", // Cache la barre de défilement sur Firefox
             }}
           // direction={selectedProject ? "column" : "row"}
           >
@@ -124,7 +152,15 @@ const Portfolio = (props: headerType) => {
                   "&:hover": { transform: "scale(0.9)" },
                 }}
               >
-                <Item>{project.name}</Item>
+                {!selectedProject ?(
+                  <Card sx={{ mt: 1, maxWidth: 300, backgroundColor: "#333  " }}>
+                    <CardMedia component="img" height="100" image={project.img} alt={project.name} />
+                    <CardContent>
+                      <Typography variant="body2" color="text.secondary">{project.name + " : "+project.description}</Typography>
+                    </CardContent>
+                  </Card>
+                ): (<Item>{project.name}</Item>)
+              }
               </Grid>
             ))}
           </Grid>
@@ -134,7 +170,7 @@ const Portfolio = (props: headerType) => {
         {selectedProject && (
           <Box
             sx={{
-              width: "70%",
+              width: "80%",
               transition: "width 0.5s ease",
               backgroundColor: "#1a202c",
               padding: "2rem 0",
@@ -147,56 +183,66 @@ const Portfolio = (props: headerType) => {
             <h2>{selectedProject}</h2>
             <div className="overflow-x-auto">
               {/* <table className="min-w-full border-collapse bg-dark text-white text-left"> */}
-
               <table className="w-auto ">
                 <thead>
                   <tr className="border-b border-gray-700 text-teal-400">
                     {/* <th className="p-2">Year</th> */}
                     {/* <th className="p-2">Project</th> */}
-                    <th className="p-2">Made at</th>
+                    <th className="p-2 w-30">Made at</th>
                     {/* <th className="p-2">Progress</th>  */}
-                    <th className="p-2">Built with</th>
-                    <th className="p-2">Link</th>
+                    <th className="p-2 w-auto">Built with</th>
+                    <th className="p-2 w-10">Link</th>
                   </tr>
                 </thead>
                 <tbody>
                   {projects
-                  .filter((project) => project.name === selectedProject)
-                  .map((project, index) => (
-                    <>
-                    <tr key={index} className="border-b border-gray-700">
-                      {/* <td className="p-2">{project.year}</td> */}
-                      {/* <td className="p-2 text-teal-400">{project.name}</td>  */}
-                      <td className="p-2">{project.company}</td>
-                      {/* <td className="p-2">
-                        <span className={`px-2 py-1 rounded ${project.progress === "Completed" ? "bg-green-600" : "bg-blue-600"}`}>
-                          {project.progress}
-                        </span>
-                      </td> */}
-                      <td className="p-2 flex flex-wrap gap-2">
-                        {project.technologies.map((tech, i) => (
-                          <span className="bg-black rounded mx-1 my-0 p-2">
-                            <span key={i} className="bg-black bg-teal-700 px-2 py-3 rounded text-white text-sm">
-                              {tech}
-                            </span>
-                            {i==3 || i==7? <><br/><br/></>: ""}
-                          </span>
-                        ))}
-                      </td>
-                      <td className="p-2">
-                        <a href={`https://${project.link}`} target="_blank" rel="noopener noreferrer" className="text-teal-400 hover:underline">
-                          {project.link}
-                        </a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td><img src="" alt="" srcset="" /></td>
-                      <td>description</td>
-                    </tr>
-                    </>
-                  ))}
+                    .filter((project) => project.name === selectedProject)
+                    .map((project, index) => (
+                      <>
+                        <tr key={index} className="border-b border-gray-700">
+                          {/* <td className="p-2">{project.year}</td> */}
+                          <td className="p-5">{project.company}</td>
+                          <td className="p-2 flex flex-wrap gap-3">
+                            <span className='gap-2'>
+                            {project.technologies.map((tech, i) => (
+                              <>
+                                <Chip label={tech} sx={{ backgroundColor: "#333", color: "white" }} />
+                                {i == 3 || i == 7 ? <><br /><br /></> : ""}
+                              </>
+                              ))}
+                              </span>
+                          </td>
+                          <td className="p-2 max-length-200">
+                            {project.link.map((lien, i) => (
+                              <>
+                                <a key={i} href={`https://${lien}`} target="_blank" rel="noopener noreferrer" className="text-teal-400 hover:underline text-decoration-none">
+                                  {lien}
+                                </a><br />
+                              </>
+                            ))}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            {project.img && (
+                              <Card sx={{ mt: 2, maxWidth: 300, backgroundColor: "#333" }}>
+                                <CardMedia component="img" height="100" image={project.img} alt={project.name} />
+                                <CardContent>
+                                  <Typography variant="body2" color="text.secondary">{project.name}</Typography>
+                                </CardContent>
+                              </Card>
+                            )}
+                          </td>
+                          <td colSpan={2}>
+                            <span className='text-teal-400'>{project.post}</span>
+                          </td>
+
+                        </tr>
+                      </>
+                    ))}
                 </tbody>
               </table>
+
             </div>
           </Box>
         )}

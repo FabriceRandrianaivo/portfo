@@ -11,13 +11,13 @@
 @tailwind utilities;
 
 .contenair_app{
-    // background-image: url("../../images/ia-react-nlp.jpg");
+    background-image: url("../../images/bg.webp");
     background-repeat: repeat;
-    // background-size: cover;
+    background-size: cover;
     backdrop-filter: blur(175px) !important;
     height: 100vh;
     .filtre_app{
-        background-color: rgba(0, 0, 0, 0.867);
+        background-color: rgba(29, 23, 82, 0.357);
         backdrop-filter: blur(2px);
         height: 100vh;
     }
@@ -31,7 +31,7 @@
         color: $light-text-color;
     }
     .nav{
-        
+        background: #000;        
     }
     .hero{
 

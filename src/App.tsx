@@ -8,9 +8,9 @@ import {
 import TopHeader from './components/topHeader';
 import './assets/modele/scss/pages/App.scss';
 import Hero from "./components/hero";
-import About from "./pages/about";
+// import About from "./pages/about";
 import Project from "./pages/portfo";
-import Contact from "./pages/contact";
+// import Contact from "./pages/contact";
 import NotFund from "./pages/notFund"
 import SocialMediaLinks from './components/navReseau';
 
@@ -27,7 +27,6 @@ const App: React.FC = () => {
       body.classList.add('theme-light');
       body.classList.remove('theme-dark');
     }
-    console.log("dgjagjkfbjk")
   }, [isDarkTheme]);
 
   return (
@@ -39,8 +38,8 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<Hero/>} />
         <Route path="/project" element={<Project theme={isDarkTheme} />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
+        {/* <Route path="/about" element={<About />} /> */}
+        {/* <Route path="/contact" element={<Contact />} /> */}
         <Route path="*" element={<NotFund/>} />
       </Routes>
     </Router>
