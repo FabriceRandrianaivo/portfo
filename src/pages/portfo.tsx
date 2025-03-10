@@ -3,6 +3,7 @@ import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
+import LogoIntelliDetect from "../assets/modele/images/bg_home.png"
 import LogoMyAux from "../assets/modele/images/logo_.png";
 import LogoJupiter from "../assets/modele/images/Jupiter-logo.jpeg";
 import LogoFoodStack from "../assets/modele/images/food-track.png"
@@ -30,8 +31,8 @@ const projects = [
     description:"Detection object IA in video streaming,",
     // progress: "In Progress",
     technologies: ["React", "TypeScript", "Redux", "Bootstrap", "Sass", "MUI", "PostgreSQL", "Python", "FastAPI", "Docker", "Yolo v8s","IPWebCam","Postman"],
-    link: ["myAuxilium.ai", "app.myauxilium.ai"],
-    img: LogoMyAux,
+    link: ["github.com/FabriceRandrianaivo"],
+    img: LogoIntelliDetect,
     post: ["Lead project, Backend Developer and Developer IA (Data Scientist)"],
   },
   {
@@ -122,10 +123,10 @@ const Portfolio = (props: headerType) => {
           sx={{
             display: "flex",
             flexDirection: "column",
-            flexGrow: 1,
+            flexGrow: 4,
             width: selectedProject ? "20%" : "100%",
             transition: "width 0.5s ease",
-            p: 5,
+            m: 3,
           }}
         >
           <h1 className='title'>Projects</h1>
@@ -136,7 +137,7 @@ const Portfolio = (props: headerType) => {
               pl:3,
               overflow: "auto", // Active le défilement
               "&::-webkit-scrollbar": { display: "none" }, // Cache la barre de défilement sur Webkit (Chrome, Safari, etc.)
-              scrollbarWidth: "thin ", // Cache la barre de défilement sur Firefox
+              scrollbarWidth: "none", // Cache la barre de défilement sur Firefox
             }}
           // direction={selectedProject ? "column" : "row"}
           >
