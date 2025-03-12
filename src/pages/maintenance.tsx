@@ -25,7 +25,7 @@ const MaintenancePage: React.FC = () => {
                 <SkeletonColor />
               </td>
             </tr>
-            <tr>
+            {/* <tr>
               <td className="cell">
                 <SkeletonColor />
               </td>
@@ -33,7 +33,7 @@ const MaintenancePage: React.FC = () => {
               <td className="cell">
                 <SkeletonColor />
               </td>
-            </tr>
+            </tr> */}
           </tbody>
         </table>
       </div>

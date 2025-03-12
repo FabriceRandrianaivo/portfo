@@ -16,11 +16,11 @@ if (rootElement) {
   root.render(
     <React.StrictMode>
       {/* <Provider store={store} > */}
-      {/* <div className='contenair_app'>
-        <div className='filtre_app'> */}
+      <div className='contenair_app'>
+        <div className='filtre_app'>
           <App />
-        {/* </div>
-      </div> */}
+        </div>
+      </div>
       {/* </Provider> */}
     </React.StrictMode>
   );

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import HomeIcon from '@mui/icons-material/Home';
-import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
-import InfoIcon from '@mui/icons-material/Info';
+// import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
+// import InfoIcon from '@mui/icons-material/Info';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import LightModeIcon from '@mui/icons-material/LightMode';
@@ -31,9 +31,9 @@ const TopHeader = (props: headerType) => {
       <nav>
         <ul>
           <li onClick={()=> navigate("/")} className={isHome ? "active": ""}><HomeIcon fontSize="medium" className="navIcons"/></li>
-          <li onClick={()=> navigate("/about")}><InfoIcon fontSize="medium"className="navIcons"/></li>
+          {/* <li onClick={()=> navigate("/about")}><InfoIcon fontSize="medium"className="navIcons"/></li> */}
           <li onClick={()=> navigate("/project")}><AccountTreeIcon fontSize="medium" className="navIcons"/></li>
-          <li onClick={()=> navigate("/contact")}><PermContactCalendarIcon fontSize="medium" className="navIcons"/></li>
+          {/* <li onClick={()=> navigate("/contact")}><PermContactCalendarIcon fontSize="medium" className="navIcons"/></li> */}
           <li onClick={toggleTheme} >{isDarkTheme? <LightModeIcon cursor="pointer"/>: <Brightness4Icon cursor="pointer"/>}</li>
         </ul>
       </nav>
