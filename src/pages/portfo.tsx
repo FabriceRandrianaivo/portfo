@@ -28,74 +28,125 @@ const projects = [
     year: 2025,
     name: "IntelliDetect",
     company: "Project of study",
-    description:"Detection object IA in video streaming,",
+    description: "Object detection with Yolo streaming, Intruder monitoring, Object classification .",
     // progress: "In Progress",
-    technologies: ["React", "TypeScript", "Redux", "Bootstrap", "Sass", "MUI", "PostgreSQL", "Python", "FastAPI", "Docker", "Yolo v8s","IPWebCam","Postman"],
-    link: ["github.com/FabriceRandrianaivo"],
+    technologies: ["React", "TypeScript", "Redux", "Bootstrap", "Sass", "MUI", "PostgreSQL", "Python", "FastAPI", "Docker", "Yolo v8s", "IPWebCam", "Postman"],
+    link: ["github.com/FabriceRandrianaivo/IntelliDetectFront", "https://github.com/FabriceRandrianaivo/IntelliDetectBack"],
     img: LogoIntelliDetect,
-    post: ["Lead project, Backend Developer and Developer IA (Data Scientist)"],
+    post: [
+      {
+        title_post: "Lead project, Backend Developer and Developer IA (Data Scientist)",
+        desc_post: "",
+      }
+    ],
   },
   {
     year: 2024,
     name: "Jupiter myAux",
     company: "Constellation Group",
+    description: "Billing management for all company projects, MyAuxilium SuperAdmin back office management. ",
     // progress: "In Progress",
-    technologies: ["NextJS", "TypeScript", "Tailwind", "Redux", "Sass", "PostgreSQL", "Python", "FastAPI", "Docker",],
+    technologies: ["NextJS", "TypeScript", "Tailwind", "Redux", "Sass", "PostgreSQL", "Python", "FastAPI", "Docker", "Notion"],
     link: ["JupiterMyAux.app"],
     img: LogoJupiter,
-    post: ["Lead Tech Developer Frontend (React) of project"],
+    post: [
+      {
+        "title_post": "Lead Tech Developer Frontend (Next) of project",
+        "desc_post": ["Architecture and Development: Design and optimize responsive interfaces while ensuring the scalability, performance, and maintainability of the front-end code.", "Management and Collaboration: Supervise the front-end team, ensure code quality, and collaborate with the back-end, design, and product teams.", "Quality and Innovation: Ensure code quality through testing, monitor technology, and propose continuous improvements."],
+      }
+    ],
+    // post: [
+    //   {
+    //     title_post: "Lead Tech Developer Frontend (React) of project",
+    //     desc_post: ["Architecture et développement : Concevoir et optimiser des interfaces réactives en assurant la scalabilité, la performance et la maintenabilité du code frontend. ", "Encadrement et collaboration : Encadrer l’équipe frontend, assurer la qualité du code et collaborer avec les équipes backend, design et produit.", "Qualité et innovation : Garantir la qualité du code avec des tests, assurer une veille technologique et proposer des améliorations continues."],
+    //   }
+    // ],
   },
   {
     year: 2024,
     name: "NER and Topic Modeling ",
     company: "Constellation Group",
-    description:"Boost performance of chat with docs",
+    description: "Boost performance of chat with docs",
     // progress: "In Progress",
-    technologies: ["NLP","Name Entity Recognitive","Topics Modeling","Python","Bert Model Base uncased ","LDA Model","JupiterNoteBook","PostgreSQL", "FastAPI", "Postman"],
+    technologies: ["NLP", "Name Entity Recognitive", "Topics Modeling", "Python", "Bert Model Base uncased ", "LDA Model", "JupiterNoteBook", "PostgreSQL", "FastAPI", "Postman", "Mission X", "Notion"],
     link: ["myAuxilium.ai", "app.myauxilium.ai"],
     img: LogoMyAux,
-    post: ["Data Scientist"],
+    post: [
+      {
+        title_post: "Data Scientist",
+        desc_post: "",
+      }
+    ],
   },
   {
     year: 2024,
     name: "myAuxilium",
     company: "Constellation Group",
-    description:"App chat with doc, chat with professor IA, chat with Team in Society ,collection doc and session chat",
+    description: "App chat with doc, chat with professor IA, chat with Team in Society ,collection doc and session chat",
     // progress: "In Progress",
-    technologies: ["React", "TypeScript", "Redux", "Bootstrap", "Sass", "MUI", "PostgreSQL", "Python", "FastAPI", "Docker", "Open IA"],
+    technologies: ["React", "TypeScript", "Redux", "Bootstrap", "Sass", "MUI", "PostgreSQL", "Python", "FastAPI", "Docker", "Open IA", "Mission X"],
     link: ["myAuxilium.ai", "app.myauxilium.ai"],
     img: LogoMyAux,
-    post: ["Lead Tech Developer Frontend (React) of project"],
+    post: [
+      {
+        "title_post": "Lead Tech Developer Frontend (React) of project",
+        "desc_post": ["Architecture and Development: Design and optimize responsive interfaces while ensuring the scalability, performance, and maintainability of the front-end code.", "Management and Collaboration: Supervise the front-end team, ensure code quality, and collaborate with the back-end, design, and product teams.", "Quality and Innovation: Ensure code quality through testing, monitor technology, and propose continuous improvements."],
+      }
+    ],
+    // post: [
+    //   {
+    //     title_post: "Lead Tech Developer Frontend (React) of project",
+    //     desc_post: "",
+    //   }
+    // ],
   },
   {
     year: 2023,
     name: "Food Track",
     company: "Project of study",
+    description: "Online delivery system with real-time order rental. Collaboration with the best restaurants in Madagascar.",
     // progress: "Completed",
     technologies: ["Html5", "Css3", "Bootstrap", "JavaScript", "Vue", "NodeJs", "MongoDB"],
     link: ["github.com/FabriceRandrianaivo"],
     img: LogoFoodStack,
-    post: ["Lead of project"],
+    post: [
+      {
+        title_post: "Lead of project",
+        desc_post: "",
+      }
+    ],
   },
   {
     year: 2022,
     name: "E-voyage",
     company: "Project of study",
     // progress: "In Progress",
+    description: "Tour Operator, Touristic place, archipelago and hotel in Madagascar.",
     technologies: ["Java", "XML", "Android Studio", "SQLite"],
     link: ["github.com/FabriceRandrianaivo"],
     img: LogoEvoyazy,
-    post: ["Frontend Developer"]
+    post: [
+      {
+        title_post: "Frontend Developer",
+        desc_post: "",
+      }
+    ],
   },
   {
     year: 2021,
     name: "Save Password",
     company: "Project personnel",
+    description: "",
     // progress: "Completed",
     technologies: ["HTML5", "CSS", "PHP", "MySql", "Wamp Server",],
     link: ["github.com/FabriceRandrianaivo/SavePassword-1.0-2021"],
     img: "",
-    post: ["Lead of project"],
+    post: [
+      {
+        title_post: "Lead of project",
+        desc_post: "",
+      }
+    ],
   },
 ];
 
@@ -134,7 +185,7 @@ const Portfolio = (props: headerType) => {
             container
             spacing={2}
             sx={{
-              pl:3,
+              pl: 3,
               overflow: "auto", // Active le défilement
               "&::-webkit-scrollbar": { display: "none" }, // Cache la barre de défilement sur Webkit (Chrome, Safari, etc.)
               scrollbarWidth: "none", // Cache la barre de défilement sur Firefox
@@ -153,15 +204,15 @@ const Portfolio = (props: headerType) => {
                   "&:hover": { transform: "scale(0.9)" },
                 }}
               >
-                {!selectedProject ?(
+                {!selectedProject ? (
                   <Card sx={{ mt: 1, maxWidth: 300, backgroundColor: "#333  " }}>
                     <CardMedia component="img" height="100" image={project.img} alt={project.name} />
                     <CardContent>
-                      <Typography variant="body2" color="text.secondary">{project.name + " : "+project.description}</Typography>
+                      <Typography variant="body2" color="text.secondary">{project.name + " : " + project.description}</Typography>
                     </CardContent>
                   </Card>
-                ): (<Item>{project.name}</Item>)
-              }
+                ) : (<Item>{project.name}</Item>)
+                }
               </Grid>
             ))}
           </Grid>
@@ -205,13 +256,13 @@ const Portfolio = (props: headerType) => {
                           <td className="p-5">{project.company}</td>
                           <td className="p-2 flex flex-wrap gap-3">
                             <span className='gap-2'>
-                            {project.technologies.map((tech, i) => (
-                              <>
-                                <Chip label={tech} sx={{ backgroundColor: "#333", color: "white" }} />
-                                {i == 3 || i == 7 ? <><br /><br /></> : ""}
-                              </>
+                              {project.technologies.map((tech, i) => (
+                                <>
+                                  <Chip label={tech} sx={{ backgroundColor: "#333", color: "white" }} />
+                                  {i == 3 || i == 7 ? <><br /><br /></> : ""}
+                                </>
                               ))}
-                              </span>
+                            </span>
                           </td>
                           <td className="p-2 max-length-200">
                             {project.link.map((lien, i) => (
@@ -235,7 +286,15 @@ const Portfolio = (props: headerType) => {
                             )}
                           </td>
                           <td colSpan={2}>
-                            <span className='text-teal-400'>{project.post}</span>
+                            {/* <div className='text-teal-400'>{project.post[0].title_post}</div> */}
+                            <div className='text-teal-400'>
+                              <ul className='text-bold-500'>{project.post[0].title_post}
+                                {Array.isArray(project.post[0].desc_post) &&
+                                  project.post[0].desc_post.map((desc, index) => (
+                                    <li key={index}>{desc}</li>
+                                  ))}
+                              </ul>
+                            </div>
                           </td>
 
                         </tr>
