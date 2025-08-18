@@ -3,6 +3,7 @@ import LogoMyAux from "../assets/modele/images/logo_.png";
 import LogoJupiter from "../assets/modele/images/Jupiter-logo.jpeg";
 import LogoFoodStack from "../assets/modele/images/food-track.png";
 import LogoEvoyazy from "../assets/modele/images/e-voyazy.png";
+import LogoRedPy from "../assets/modele/images/redpy.jpeg";
 
 export interface Project {
 	year: number;
@@ -21,75 +22,137 @@ export type ProjectReadonly = Readonly<Project>;
 export const projects: ReadonlyArray<ProjectReadonly> = [
 	{
 		year: 2025,
+		name: "RedPy AI",
+		company: "Personal Project",
+		// category: "Web App / AI",
+		description: "AI-powered platform for interactive Python code execution, visualization, and learning.",
+		technologies: ["React","TypeScript","Redux","Sass","Python","Docker","OpenAI API","Vercel","MUI","Material UI","Motion"],
+		link: ["redpy-ai.vercel.app"],
+		img: LogoRedPy,
+		post: [
+			"Project Lead & Developer: fullstack development from frontend to backend",
+			"Implemented interactive Python execution environment and real-time visualization",
+			"Integrated OpenAI API for AI-assisted coding suggestions",
+			"Deployed the project on Vercel for production access",
+			"Optimized performance and responsive design for both desktop and mobile"
+		],
+	},
+	{
+		year: 2025,
 		name: "IntelliDetect",
 		company: "Project of study",
-		description:"Detection object IA in video streaming,",
-		// progress: "In Progress",
-		technologies: ["React", "TypeScript", "Redux", "Bootstrap", "Sass", "MUI", "PostgreSQL", "Python", "FastAPI", "Docker", "Yolo v8s","IPWebCam","Postman"],
+		description: "Intelligent object detection in real-time video streaming using YOLO and FastAPI backend.",
+		technologies: [
+			"React", "TypeScript", "Redux", "Bootstrap", "Sass", "MUI",
+			"PostgreSQL", "Python", "FastAPI", "Docker", "Yolo v8s",
+			"IPWebCam", "Postman"
+		],
 		link: ["github.com/FabriceRandrianaivo"],
 		img: LogoIntelliDetect,
-		post: ["Lead project, Backend Developer and Developer IA (Data Scientist)"],
+		post: [
+			"Project Lead: responsible for technical design and architecture",
+			"Backend Developer: implemented APIs and optimized database queries",
+			"AI Engineer / Data Scientist: trained and fine-tuned YOLO v8s for object detection",
+			"Integrated real-time video streaming with AI inference pipeline",
+			"Deployed and containerized the solution with Docker"
+		],
 	},
 	{
 		year: 2024,
 		name: "Jupiter myAux",
 		company: "Constellation Group",
-		// progress: "In Progress",
-		technologies: ["NextJS", "TypeScript", "Tailwind", "Redux", "Sass", "PostgreSQL", "Python", "FastAPI", "Docker",],
+		description: "A professional assistant app designed to centralize workflows and enhance productivity.",
+		technologies: [
+			"NextJS", "TypeScript", "Tailwind", "Redux", "Sass",
+			"PostgreSQL", "Python", "FastAPI", "Docker"
+		],
 		link: ["JupiterMyAux.app"],
 		img: LogoJupiter,
-		post: ["Lead Tech Developer Frontend (React) of project"],
-	},
-	{
-		year: 2024,
-		name: "NER and Topic Modeling ",
-		company: "Constellation Group",
-		description:"Boost performance of chat with docs",
-		// progress: "In Progress",
-		technologies: ["NLP","Name Entity Recognitive","Topics Modeling","Python","Bert Model Base uncased ","LDA Model","JupiterNoteBook","PostgreSQL", "FastAPI", "Postman"],
-		link: ["myAuxilium.ai", "app.myauxilium.ai"],
-		img: LogoMyAux,
-		post: ["Data Scientist"],
+		post: [
+			"Lead Frontend Developer (React/Next.js): designed reusable UI components and managed state with Redux",
+			"Collaborated with backend team for API integration and data management",
+			"Optimized performance and improved UI/UX with Tailwind and Sass",
+			"Contributed to deployment and Docker-based CI/CD pipeline"
+		],
 	},
 	{
 		year: 2024,
 		name: "myAuxilium",
 		company: "Constellation Group",
-		description:"App chat with doc, chat with professor IA, chat with Team in Society ,collection doc and session chat",
-		// progress: "In Progress",
-		technologies: ["React", "TypeScript", "Redux", "Bootstrap", "Sass", "MUI", "PostgreSQL", "Python", "FastAPI", "Docker", "Open IA"],
+		description: "AI-based collaborative platform: chat with documents, professors, and teams. Includes document collection and knowledge sessions.",
+		technologies: [
+			"React", "TypeScript", "Redux", "Bootstrap", "Sass", "MUI",
+			"PostgreSQL", "Python", "FastAPI", "Docker", "OpenAI"
+		],
 		link: ["myAuxilium.ai", "app.myauxilium.ai"],
 		img: LogoMyAux,
-		post: ["Lead Tech Developer Frontend (React) of project"],
+		post: [
+			"Lead Frontend Developer: built and optimized the chat interface with React and Redux",
+			"Designed responsive UI with MUI and Bootstrap",
+			"Collaborated with AI engineers to integrate OpenAI-powered features",
+			"Ensured scalability and smooth integration with backend APIs"
+		],
+	},
+	{
+		year: 2024,
+		name: "NER and Topic Modeling",
+		company: "Constellation Group",
+		description: "Enhanced AI-powered chat with advanced NLP models for document understanding and semantic search.",
+		technologies: [
+			"NLP", "Named Entity Recognition", "Topic Modeling", "Python",
+			"BERT Base Uncased", "LDA Model", "Jupyter Notebook",
+			"PostgreSQL", "FastAPI", "Postman"
+		],
+		link: ["myAuxilium.ai", "app.myauxilium.ai"],
+		img: LogoMyAux,
+		post: [
+			"Data Scientist: developed and fine-tuned NER models to extract entities",
+			"Implemented topic modeling with LDA for text summarization",
+			"Preprocessed datasets and optimized NLP pipelines",
+			"Collaborated with backend developers to expose models via FastAPI"
+		],
 	},
 	{
 		year: 2023,
 		name: "Food Track",
 		company: "Project of study",
-		// progress: "Completed",
-		technologies: ["Html5", "Css3", "Bootstrap", "JavaScript", "Vue", "NodeJs", "MongoDB"],
+		description: "A food delivery and tracking application with real-time updates.",
+		technologies: ["HTML5", "CSS3", "Bootstrap", "JavaScript", "Vue", "Node.js", "MongoDB"],
 		link: ["github.com/FabriceRandrianaivo"],
 		img: LogoFoodStack,
-		post: ["Lead of project"],
+		post: [
+			"Project Lead: managed team tasks and project planning",
+			"Fullstack Developer: developed frontend with Vue and backend with Node.js",
+			"Integrated MongoDB for order and delivery management",
+			"Designed responsive UI for mobile and desktop users"
+		],
 	},
 	{
 		year: 2022,
 		name: "E-voyage",
 		company: "Project of study",
-		// progress: "In Progress",
+		description: "Android application for booking and managing travel itineraries.",
 		technologies: ["Java", "XML", "Android Studio", "SQLite"],
 		link: ["github.com/FabriceRandrianaivo"],
 		img: LogoEvoyazy,
-		post: ["Frontend Developer"]
+		post: [
+			"Frontend Developer: implemented UI with XML in Android Studio",
+			"Integrated SQLite for offline data storage",
+			"Contributed to the design of travel booking and itinerary features"
+		],
 	},
 	{
 		year: 2021,
 		name: "Save Password",
-		company: "Project personnel",
-		// progress: "Completed",
-		technologies: ["HTML5", "CSS", "PHP", "MySql", "Wamp Server",],
+		company: "Personal Project",
+		description: "Secure web application for storing and managing user passwords.",
+		technologies: ["HTML5", "CSS", "PHP", "MySQL", "Wamp Server"],
 		link: ["github.com/FabriceRandrianaivo/SavePassword-1.0-2021"],
 		img: "",
-		post: ["Lead of project"],
+		post: [
+			"Project Lead & Developer: designed and developed the complete application",
+			"Created authentication system with PHP and MySQL",
+			"Implemented password encryption and secure data storage"
+		],
 	},
 ];
