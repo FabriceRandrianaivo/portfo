@@ -251,10 +251,11 @@
       padding: 1rem;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
       animation: float 3s ease-in-out infinite;
+      max-height: min-content;
       
       @media (max-width: 768px) {
-        right: -10px;
-        top: -10px;
+        right: 10px;
+        bottom: 10px;
         padding: 0.75rem;
       }
       

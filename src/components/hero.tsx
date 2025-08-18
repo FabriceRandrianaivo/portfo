@@ -3,7 +3,7 @@ import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 import { motion } from "framer-motion";
 import me from "../assets/modele/me.png";
-import { FaGithub, FaLinkedin, FaEnvelope, FaDownload } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaEnvelope, FaDownload,FaWhatsapp } from 'react-icons/fa';
 import { useNavigate } from "react-router-dom";
 import cvPdf from "../assets/modele/pdf/FabriceRandrianaivo_JS_2025_CV.pdf";
 
@@ -150,11 +150,14 @@ const Hero: React.FC = () => {
               <a href="https://github.com/FabriceRandrianaivo" target="_blank" rel="noopener noreferrer" className="social-link">
                 <FaGithub />
               </a>
-              <a href="#" target="_blank" rel="noopener noreferrer" className="social-link">
+              <a href="https://www.linkedin.com/in/fabrice-randrianaivo" target="_blank" rel="noopener noreferrer" className="social-link">
                 <FaLinkedin />
               </a>
-              <a href="mailto:contact@example.com" className="social-link">
+              <a href="mailto:fabrice-randrianaivo8@gmail.com" className="social-link">
                 <FaEnvelope />
+              </a>
+              <a href="https://wa.me/+261348454355" className="social-link">
+                <FaWhatsapp />
               </a>
             </motion.div>
           </div>
