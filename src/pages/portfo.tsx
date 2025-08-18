@@ -1,253 +1,335 @@
-import { useState } from 'react';
-import { experimentalStyled as styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid';
-import LogoIntelliDetect from "../assets/modele/images/bg_home.png"
-import LogoMyAux from "../assets/modele/images/logo_.png";
-import LogoJupiter from "../assets/modele/images/Jupiter-logo.jpeg";
-import LogoFoodStack from "../assets/modele/images/food-track.png"
-import LogoEvoyazy from "../assets/modele/images/e-voyazy.png"
-import { Card, CardContent, CardMedia, Chip, Typography } from '@mui/material';
+import React, { useMemo, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { projects, Project } from "../data/projects";
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark"
-    ? "#1A2027" : "#fff",
-  ...theme.typography.body2,
-  padding: theme.spacing(2),
-  textAlign: 'center',
-  // width:"60%",
-  color: theme.palette.text.secondary,
-  cursor: 'pointer',
-  ...theme.applyStyles('dark', {
-    backgroundColor: '#1A2027',
-  }),
-}));
-const projects = [
-  {
-    year: 2025,
-    name: "IntelliDetect",
-    company: "Project of study",
-    description:"Detection object IA in video streaming,",
-    // progress: "In Progress",
-    technologies: ["React", "TypeScript", "Redux", "Bootstrap", "Sass", "MUI", "PostgreSQL", "Python", "FastAPI", "Docker", "Yolo v8s","IPWebCam","Postman"],
-    link: ["github.com/FabriceRandrianaivo"],
-    img: LogoIntelliDetect,
-    post: ["Lead project, Backend Developer and Developer IA (Data Scientist)"],
-  },
-  {
-    year: 2024,
-    name: "Jupiter myAux",
-    company: "Constellation Group",
-    // progress: "In Progress",
-    technologies: ["NextJS", "TypeScript", "Tailwind", "Redux", "Sass", "PostgreSQL", "Python", "FastAPI", "Docker",],
-    link: ["JupiterMyAux.app"],
-    img: LogoJupiter,
-    post: ["Lead Tech Developer Frontend (React) of project"],
-  },
-  {
-    year: 2024,
-    name: "NER and Topic Modeling ",
-    company: "Constellation Group",
-    description:"Boost performance of chat with docs",
-    // progress: "In Progress",
-    technologies: ["NLP","Name Entity Recognitive","Topics Modeling","Python","Bert Model Base uncased ","LDA Model","JupiterNoteBook","PostgreSQL", "FastAPI", "Postman"],
-    link: ["myAuxilium.ai", "app.myauxilium.ai"],
-    img: LogoMyAux,
-    post: ["Data Scientist"],
-  },
-  {
-    year: 2024,
-    name: "myAuxilium",
-    company: "Constellation Group",
-    description:"App chat with doc, chat with professor IA, chat with Team in Society ,collection doc and session chat",
-    // progress: "In Progress",
-    technologies: ["React", "TypeScript", "Redux", "Bootstrap", "Sass", "MUI", "PostgreSQL", "Python", "FastAPI", "Docker", "Open IA"],
-    link: ["myAuxilium.ai", "app.myauxilium.ai"],
-    img: LogoMyAux,
-    post: ["Lead Tech Developer Frontend (React) of project"],
-  },
-  {
-    year: 2023,
-    name: "Food Track",
-    company: "Project of study",
-    // progress: "Completed",
-    technologies: ["Html5", "Css3", "Bootstrap", "JavaScript", "Vue", "NodeJs", "MongoDB"],
-    link: ["github.com/FabriceRandrianaivo"],
-    img: LogoFoodStack,
-    post: ["Lead of project"],
-  },
-  {
-    year: 2022,
-    name: "E-voyage",
-    company: "Project of study",
-    // progress: "In Progress",
-    technologies: ["Java", "XML", "Android Studio", "SQLite"],
-    link: ["github.com/FabriceRandrianaivo"],
-    img: LogoEvoyazy,
-    post: ["Frontend Developer"]
-  },
-  {
-    year: 2021,
-    name: "Save Password",
-    company: "Project personnel",
-    // progress: "Completed",
-    technologies: ["HTML5", "CSS", "PHP", "MySql", "Wamp Server",],
-    link: ["github.com/FabriceRandrianaivo/SavePassword-1.0-2021"],
-    img: "",
-    post: ["Lead of project"],
-  },
-];
+type ProjectWithMaybeCategory = Project & { category?: string };
+const projectsData = projects as ReadonlyArray<ProjectWithMaybeCategory>;
 
-interface headerType {
-  theme: boolean;
-  // setTheme: (theme: boolean) => void;
-}
-const Portfolio = (props: headerType) => {
+type SortKey = 'recent' | 'oldest' | 'name';
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.06 }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4 } }
+};
+
+const detailsVariants = {
+  hidden: { opacity: 0, x: 50 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.4 } },
+  exit: { opacity: 0, x: 50, transition: { duration: 0.25 } }
+};
+
+const splitResponsibilities = (roleEntries: readonly string[]): string[] => {
+  if (!roleEntries || roleEntries.length === 0) return [];
+  const parts = roleEntries.flatMap(entry => entry.split(',')).map(s => s.trim()).filter(Boolean);
+  const seen = new Set<string>();
+  return parts.filter(p => { if (seen.has(p)) return false; seen.add(p); return true; });
+};
+
+const Portfolio: React.FC = () => {
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
+  const [activeCategory, setActiveCategory] = useState<string>('All');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [sortKey, setSortKey] = useState<SortKey>('recent');
+  
 
-  const handleClick = (projectName: string) => {
-    setSelectedProject(projectName);
-  };
+  const hasCategories = useMemo(() => projectsData.some(p => !!p.category), []);
+
+  const categories = useMemo(() => {
+    if (!hasCategories) return [] as string[];
+    const base = new Set<string>(['All']);
+    projectsData.forEach(p => { if (p.category) base.add(p.category); });
+    return Array.from(base);
+  }, [hasCategories]);
+
+  const searchedProjects = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return projectsData;
+    return projectsData.filter(p => {
+      const haystack = [
+        p.name,
+        p.company,
+        p.description || '',
+        ...(p.technologies || [])
+      ].join(' ').toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [searchQuery]);
+
+  const filteredProjects = useMemo(() => {
+    const base = searchedProjects;
+    if (!hasCategories) return base;
+    if (activeCategory === 'All') return base;
+    return base.filter(p => p.category === activeCategory);
+  }, [searchedProjects, activeCategory, hasCategories]);
+
+  const sortedProjects = useMemo(() => {
+    const arr = [...filteredProjects];
+    if (sortKey === 'name') {
+      arr.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (sortKey === 'oldest') {
+      arr.sort((a, b) => a.year - b.year);
+    } else {
+      arr.sort((a, b) => b.year - a.year);
+    }
+    return arr;
+  }, [filteredProjects, sortKey]);
+
+  const selectedProjectData = useMemo(
+    () => projectsData.find(p => p.name === selectedProject) || null,
+    [selectedProject]
+  );
+
+  const openDetails = (projectName: string) => setSelectedProject(projectName);
+  const closeDetails = () => setSelectedProject(null);
+
+  
+
   return (
-    <div className={`contenair-project`}>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          height: "100vh",
-        }}
+    <div className="portfolio-container">
+      <motion.div
+        className="portfolio-header"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
       >
-        {/* Liste des projets */}
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            flexGrow: 4,
-            width: selectedProject ? "20%" : "100%",
-            transition: "width 0.5s ease",
-            m: 3,
-          }}
-        >
-          <h1 className='title'>Projects</h1>
-          <Grid
-            container
-            spacing={2}
-            sx={{
-              pl:3,
-              overflow: "auto", // Active le défilement
-              "&::-webkit-scrollbar": { display: "none" }, // Cache la barre de défilement sur Webkit (Chrome, Safari, etc.)
-              scrollbarWidth: "none", // Cache la barre de défilement sur Firefox
-            }}
-          // direction={selectedProject ? "column" : "row"}
-          >
-            {projects.map((project, index) => (
-              <Grid
-                item
-                xs={selectedProject ? 12 : 4}
-                key={index}
-                onClick={() => handleClick(project.name)}
-                sx={{
-                  cursor: "pointer",
-                  transition: "transform 0.3s",
-                  "&:hover": { transform: "scale(0.9)" },
-                }}
-              >
-                {!selectedProject ?(
-                  <Card sx={{ mt: 1, maxWidth: 300, backgroundColor: "#333  " }}>
-                    <CardMedia component="img" height="100" image={project.img} alt={project.name} />
-                    <CardContent>
-                      <Typography variant="body2" color="text.secondary">{project.name + " : "+project.description}</Typography>
-                    </CardContent>
-                  </Card>
-                ): (<Item>{project.name}</Item>)
-              }
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
+        <h1 className="portfolio-title">Projects</h1>
+        <p className="portfolio-subtitle">
+          A selection of real projects I built. Click a card to view details, stack, and links.
+        </p>
 
-        {/* Détails du projet */}
-        {selectedProject && (
-          <Box
-            sx={{
-              width: "80%",
-              transition: "width 0.5s ease",
-              backgroundColor: "#1a202c",
-              padding: "2rem 0",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <h2>{selectedProject}</h2>
-            <div className="overflow-x-auto">
-              {/* <table className="min-w-full border-collapse bg-dark text-white text-left"> */}
-              <table className="w-auto ">
-                <thead>
-                  <tr className="border-b border-gray-700 text-teal-400">
-                    {/* <th className="p-2">Year</th> */}
-                    {/* <th className="p-2">Project</th> */}
-                    <th className="p-2 w-30">Made at</th>
-                    {/* <th className="p-2">Progress</th>  */}
-                    <th className="p-2 w-auto">Built with</th>
-                    <th className="p-2 w-10">Link</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {projects
-                    .filter((project) => project.name === selectedProject)
-                    .map((project, index) => (
-                      <>
-                        <tr key={index} className="border-b border-gray-700">
-                          {/* <td className="p-2">{project.year}</td> */}
-                          <td className="p-5">{project.company}</td>
-                          <td className="p-2 flex flex-wrap gap-3">
-                            <span className='gap-2'>
-                            {project.technologies.map((tech, i) => (
-                              <>
-                                <Chip label={tech} sx={{ backgroundColor: "#333", color: "white" }} />
-                                {i == 3 || i == 7 ? <><br /><br /></> : ""}
-                              </>
-                              ))}
-                              </span>
-                          </td>
-                          <td className="p-2 max-length-200">
-                            {project.link.map((lien, i) => (
-                              <>
-                                <a key={i} href={`https://${lien}`} target="_blank" rel="noopener noreferrer" className="text-teal-400 hover:underline text-decoration-none">
-                                  {lien}
-                                </a><br />
-                              </>
-                            ))}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            {project.img && (
-                              <Card sx={{ mt: 2, maxWidth: 300, backgroundColor: "#333" }}>
-                                <CardMedia component="img" height="100" image={project.img} alt={project.name} />
-                                <CardContent>
-                                  <Typography variant="body2" color="text.secondary">{project.name}</Typography>
-                                </CardContent>
-                              </Card>
-                            )}
-                          </td>
-                          <td colSpan={2}>
-                            <span className='text-teal-400'>{project.post}</span>
-                          </td>
+        {/* Toolbar: Search + Sort + Filters (if any) */}
+        <div className="portfolio-toolbar" role="region" aria-label="Search and sort projects">
+          <input
+            className="search-input"
+            type="text"
+            placeholder="Search by name, company, or tech..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            aria-label="Search projects"
+          />
 
-                        </tr>
-                      </>
-                    ))}
-                </tbody>
-              </table>
-
+          <div className="toolbar-right">
+            <div className="sort-control">
+              <label htmlFor="sortKey">Sort</label>
+              <select id="sortKey" value={sortKey} onChange={(e) => setSortKey(e.target.value as SortKey)}>
+                <option value="recent">Most recent</option>
+                <option value="oldest">Oldest</option>
+                <option value="name">Name (A→Z)</option>
+              </select>
             </div>
-          </Box>
-        )}
-      </Box>
+
+            {hasCategories && (
+              <div className="category-filters" role="tablist" aria-label="Filter projects by category">
+                {categories.map(category => (
+                  <button
+                    key={category}
+                    role="tab"
+                    aria-selected={activeCategory === category}
+                    className={`filter-btn ${activeCategory === category ? 'active' : ''}`}
+                    onClick={() => setActiveCategory(category)}
+                  >
+                    {category}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="results-row">
+          <span className="results-count">{sortedProjects.length} result{sortedProjects.length !== 1 ? 's' : ''}</span>
+        </div>
+      </motion.div>
+
+      <div className="portfolio-content">
+        <motion.div
+          className="cards-grid"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          {sortedProjects.map(project => {
+            const primaryRole = project.post && project.post.length > 0 ? project.post[0] : '';
+            const shortRole = primaryRole ? primaryRole.split(',')[0] : '';
+            const firstLink = project.link && project.link.length > 0 ? project.link[0] : '';
+            const firstLinkIsGitHub = firstLink.includes('github.com');
+
+            return (
+              <motion.article
+                key={project.name}
+                className="project-card"
+                variants={itemVariants}
+                whileHover={{ y: -6 }}
+                onClick={() => openDetails(project.name)}
+                tabIndex={0}
+                onKeyDown={(e) => { if (e.key === 'Enter') openDetails(project.name); }}
+                aria-label={`Open details for ${project.name}`}
+              >
+                <div className="project-media">
+                  <img
+                    src={project.img}
+                    alt={project.name}
+                    className="project-image"
+                  />
+                  {project.category && (
+                    <span className="project-chip">{project.category}</span>
+                  )}
+                  {shortRole && (
+                    <span className="role-chip" title={primaryRole}>{shortRole}</span>
+                  )}
+                </div>
+
+                <div className="project-body">
+                  <header className="project-header">
+                    <h3 className="project-title">{project.name}</h3>
+                    <div className="project-meta">
+                      <span className="company">{project.company}</span>
+                      <span className="year">{project.year}</span>
+                    </div>
+                  </header>
+
+                  {project.description && (
+                    <p className="project-description">{project.description}</p>
+                  )}
+
+                  {shortRole && (
+                    <p className="project-role-summary"><strong>Role:</strong> {primaryRole}</p>
+                  )}
+
+                  <div className="project-tech">
+                    {project.technologies.slice(0, 4).map((tech) => (
+                      <span key={`${project.name}-${tech}`} className="tech-tag">{tech}</span>
+                    ))}
+                    {project.technologies.length > 4 && (
+                      <span className="tech-tag more">+{project.technologies.length - 4}</span>
+                    )}
+                  </div>
+
+                  <div className="project-actions" onClick={(e) => e.stopPropagation()}>
+                    <button className="btn-small" onClick={() => openDetails(project.name)}>Details</button>
+                    {firstLink && (
+                      <a
+                        className="link-mini"
+                        href={`https://${firstLink}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={firstLinkIsGitHub ? 'Open GitHub' : 'Open link'}
+                      >
+                        {firstLinkIsGitHub ? 'GitHub' : 'Link'}
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </motion.article>
+            );
+          })}
+        </motion.div>
+
+        <AnimatePresence>
+          {selectedProjectData && (
+            <motion.aside
+              className="project-details"
+              key={selectedProjectData.name}
+              variants={detailsVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              aria-modal="true"
+              role="dialog"
+            >
+              <button className="details-close" onClick={closeDetails} aria-label="Close details">×</button>
+
+              <div className="details-header">
+                <h2>{selectedProjectData.name}</h2>
+                <div className="details-meta">
+                  <span className="company">{selectedProjectData.company}</span>
+                  <span className="year">{selectedProjectData.year}</span>
+                  {selectedProjectData.category && (
+                    <span className="category">{selectedProjectData.category}</span>
+                  )}
+                </div>
+                {selectedProjectData.post && selectedProjectData.post.length > 0 && (
+                  <p className="role-summary"><strong>Role:</strong> {selectedProjectData.post[0]}</p>
+                )}
+              </div>
+
+              <div className="details-content">
+                {selectedProjectData.description && (
+                  <div className="details-section">
+                    <h4>Overview</h4>
+                    <p>{selectedProjectData.description}</p>
+                  </div>
+                )}
+
+                <div className="details-section">
+                  <h4>Role</h4>
+                  <ul className="list">
+                    {selectedProjectData.post.map((p, i) => (
+                      <li key={i}>{p}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                {selectedProjectData.post && (
+                  <div className="details-section">
+                    <h4>Responsibilities</h4>
+                    <div className="responsibility-tags">
+                      {splitResponsibilities(selectedProjectData.post).map((r, i) => (
+                        <span className="responsibility-tag" key={`${selectedProjectData.name}-resp-${i}`}>{r}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="details-section">
+                  <h4>Tech stack</h4>
+                  <div className="tech-list">
+                    {selectedProjectData.technologies.map((tech) => (
+                      <span key={`${selectedProjectData.name}-${tech}`} className="tech-tag">{tech}</span>
+                    ))}
+                  </div>
+                </div>
+
+                {selectedProjectData.link.length > 0 && (
+                  <div className="details-section">
+                    <h4>Links</h4>
+                    <div className="links">
+                      {selectedProjectData.link.map((l, i) => (
+                        <a
+                          key={i}
+                          href={`https://${l}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="link-btn"
+                        >
+                          {l.includes('github.com') ? 'GitHub' : 'Visit'}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {selectedProjectData.img && (
+                  <div className="details-section">
+                    <h4>Preview</h4>
+                    <img src={selectedProjectData.img} alt={selectedProjectData.name} className="details-image" />
+                  </div>
+                )}
+              </div>
+            </motion.aside>
+          )}
+        </AnimatePresence>
+      </div>
+
+      
     </div>
   );
 };

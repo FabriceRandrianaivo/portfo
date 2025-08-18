@@ -33,7 +33,7 @@ const App: React.FC = () => {
     <Router>
       <header>
         <TopHeader theme={isDarkTheme} setTheme={setIsDarkTheme} />
-        <SocialMediaLinks/>
+        {/* <SocialMediaLinks/> */}
       </header>
       <Routes>
         <Route path="/" element={<Hero/>} />

@@ -1,74 +1,77 @@
 
 .header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
-    padding: 1rem;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 1000;
+	padding: 1rem;
+	background: rgba(10, 25, 47, 0.9);
+	backdrop-filter: blur(12px);
+	border-bottom: 1px solid rgba(100, 255, 218, 0.15);
+	box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+	transition: background 0.2s ease, box-shadow 0.2s ease;
   
-    nav ul {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      list-style: none;
+	nav ul {
+		display: flex;
+		justify-content: center;
+		gap: 2rem;
+		list-style: none;
+		margin: 0;
+		padding: 0;
   
-      li a {
-        text-decoration: none;
-        font-weight: thin;
-        cursor: pointer;
-        &:hover {
-          color: #00ff00;
-        }
-      }
-    }
-  }
+		li a {
+			text-decoration: none;
+			font-weight: 500;
+			cursor: pointer;
+			color: #ccd6f6;
+			transition: color 0.2s ease;
+			&:hover {
+				color: #64ffda;
+			}
+		}
+	}
+}
 
-  .navIcons{
-    cursor: pointer;
-        &:hover {
-          color: #00ff00;
-        }
-  }
-  
+.navIcons{
+	cursor: pointer;
+	&:hover {
+		color: #00ff00;
+	}
+}
 
+// ***************************** Left Bar *****************************//
 
+.social-media-links {
+	position: fixed;
+	top: 50%;
+	left: 0;
+	transform: translateY(-50%);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background-color: rgba(0, 0, 0, 0.7);
+	padding: 10px;
+	border-radius: 5px;
+}
 
+.social-media-links ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
 
-  // ***************************** Left Bar *****************************//
+.social-media-links li {
+	margin: 10px 0;
+	cursor: pointer;
+}
 
+.social-icon {
+	color: white;
+	transition: color 0.3s ease;
+}
 
-
-  .social-media-links {
-    position: fixed;
-    top: 50%;
-    left: 0;
-    transform: translateY(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: rgba(0, 0, 0, 0.7);
-    padding: 10px;
-    border-radius: 5px;
-  }
-  
-  .social-media-links ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .social-media-links li {
-    margin: 10px 0;
-    cursor: pointer;
-  }
-  
-  .social-icon {
-    color: white;
-    transition: color 0.3s ease;
-  }
-  
-  .social-icon:hover {
-    color: #4caf50; /* Change to any hover color */
-  }
+.social-icon:hover {
+	color: #4caf50; /* Change to any hover color */
+}
   
