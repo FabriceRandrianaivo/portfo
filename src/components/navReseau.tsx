@@ -41,7 +41,7 @@ const SocialMediaLinks = () => {
          {/* Lien WhatsApp */}
          <li>
           <Tooltip title="WhatsApp" arrow>
-            <a href="https://wa.me/+261348454355" target="_blank" rel="noopener noreferrer">
+            <a href="https://wa.me/+261328454355" target="_blank" rel="noopener noreferrer">
               <WhatsAppIcon fontSize="medium" className="social-icon" />
             </a>
           </Tooltip>
