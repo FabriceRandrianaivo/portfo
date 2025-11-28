@@ -156,7 +156,7 @@ const Hero: React.FC = () => {
               <a href="mailto:fabrice-randrianaivo8@gmail.com" className="social-link">
                 <FaEnvelope />
               </a>
-              <a href="https://wa.me/+261348454355" className="social-link">
+              <a href="https://wa.me/+261328454355" className="social-link">
                 <FaWhatsapp />
               </a>
             </motion.div>
