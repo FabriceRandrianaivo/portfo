@@ -1,6 +1,10 @@
 import React, { useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { projects, Project } from "../data/projects";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 type ProjectWithMaybeCategory = Project & { category?: string };
 const projectsData = projects as ReadonlyArray<ProjectWithMaybeCategory>;
@@ -38,7 +42,7 @@ const Portfolio: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [sortKey, setSortKey] = useState<SortKey>('recent');
-  
+
 
   const hasCategories = useMemo(() => projectsData.some(p => !!p.category), []);
 
@@ -90,7 +94,7 @@ const Portfolio: React.FC = () => {
   const openDetails = (projectName: string) => setSelectedProject(projectName);
   const closeDetails = () => setSelectedProject(null);
 
-  
+
 
   return (
     <div className="portfolio-container">
@@ -107,7 +111,7 @@ const Portfolio: React.FC = () => {
 
         {/* Toolbar: Search + Sort + Filters (if any) */}
         <div className="portfolio-toolbar" role="region" aria-label="Search and sort projects">
-          <input
+          <Input
             className="search-input"
             type="text"
             placeholder="Search by name, company, or tech..."
@@ -163,72 +167,111 @@ const Portfolio: React.FC = () => {
             const firstLinkIsGitHub = firstLink.includes('github.com');
 
             return (
-              <motion.article
+              <motion.div
                 key={project.name}
-                className="project-card"
                 variants={itemVariants}
                 whileHover={{ y: -6 }}
-                onClick={() => openDetails(project.name)}
-                tabIndex={0}
-                onKeyDown={(e) => { if (e.key === 'Enter') openDetails(project.name); }}
-                aria-label={`Open details for ${project.name}`}
               >
-                <div className="project-media">
-                  <img
-                    src={project.img}
-                    alt={project.name}
-                    className="project-image"
-                  />
-                  {project.category && (
-                    <span className="project-chip">{project.category}</span>
-                  )}
-                  {shortRole && (
-                    <span className="role-chip" title={primaryRole}>{shortRole}</span>
-                  )}
-                </div>
+                <Card
+                  className="project-card cursor-pointer overflow-hidden group hover:shadow-2xl hover:border-cyan-400/40 transition-all duration-300"
+                  onClick={() => openDetails(project.name)}
+                  tabIndex={0}
+                  onKeyDown={(e) => { if (e.key === 'Enter') openDetails(project.name); }}
+                  aria-label={`Open details for ${project.name}`}
+                >
+                  <div className="project-media relative">
+                    <img
+                      src={project.img}
+                      alt={project.name}
+                      className="project-image w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    {project.category && (
+                      <Badge variant="secondary" className="absolute bottom-3 left-3 bg-cyan-500/90 text-white border-0 shadow-lg">
+                        {project.category}
+                      </Badge>
+                    )}
+                    {shortRole && (
+                      <Badge variant="outline" className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm border-cyan-400/50" title={primaryRole}>
+                        {shortRole}
+                      </Badge>
+                    )}
+                  </div>
 
-                <div className="project-body">
-                  <header className="project-header">
-                    <h3 className="project-title">{project.name}</h3>
-                    <div className="project-meta">
-                      <span className="company">{project.company}</span>
-                      <span className="year">{project.year}</span>
+                  <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <CardTitle className="text-xl text-cyan-400 group-hover:text-cyan-300 transition-colors">
+                        {project.name}
+                      </CardTitle>
+                      <Badge variant="outline" className="text-xs shrink-0">
+                        {project.year}
+                      </Badge>
                     </div>
-                  </header>
+                    <CardDescription className="text-sm text-muted-foreground">
+                      {project.company}
+                    </CardDescription>
+                  </CardHeader>
 
-                  {project.description && (
-                    <p className="project-description">{project.description}</p>
-                  )}
-
-                  {shortRole && (
-                    <p className="project-role-summary"><strong>Role:</strong> {primaryRole}</p>
-                  )}
-
-                  <div className="project-tech">
-                    {project.technologies.slice(0, 4).map((tech) => (
-                      <span key={`${project.name}-${tech}`} className="tech-tag">{tech}</span>
-                    ))}
-                    {project.technologies.length > 4 && (
-                      <span className="tech-tag more">+{project.technologies.length - 4}</span>
+                  <CardContent className="space-y-3">
+                    {project.description && (
+                      <p className="text-sm text-muted-foreground line-clamp-2">
+                        {project.description}
+                      </p>
                     )}
-                  </div>
 
-                  <div className="project-actions" onClick={(e) => e.stopPropagation()}>
-                    <button className="btn-small" onClick={() => openDetails(project.name)}>Details</button>
+                    {shortRole && (
+                      <p className="text-xs text-muted-foreground">
+                        <strong className="text-foreground">Role:</strong> {primaryRole}
+                      </p>
+                    )}
+
+                    <div className="flex flex-wrap gap-1.5">
+                      {project.technologies.slice(0, 4).map((tech) => (
+                        <Badge
+                          key={`${project.name}-${tech}`}
+                          variant="tech"
+                          className="text-xs"
+                        >
+                          {tech}
+                        </Badge>
+                      ))}
+                      {project.technologies.length > 4 && (
+                        <Badge variant="secondary" className="text-xs">
+                          +{project.technologies.length - 4}
+                        </Badge>
+                      )}
+                    </div>
+                  </CardContent>
+
+                  <CardFooter className="pt-0 gap-2" onClick={(e) => e.stopPropagation()}>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => openDetails(project.name)}
+                      className="flex-1"
+                    >
+                      Details
+                    </Button>
                     {firstLink && (
-                      <a
-                        className="link-mini"
-                        href={`https://${firstLink}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={firstLinkIsGitHub ? 'Open GitHub' : 'Open link'}
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        asChild
+                        className="flex-1"
                       >
-                        {firstLinkIsGitHub ? 'GitHub' : 'Link'}
-                      </a>
+                        <a
+                          href={`https://${firstLink}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={firstLinkIsGitHub ? 'Open GitHub' : 'Open link'}
+                        >
+                          {firstLinkIsGitHub ? 'GitHub' : 'Link'}
+                        </a>
+                      </Button>
                     )}
-                  </div>
-                </div>
-              </motion.article>
+                  </CardFooter>
+                </Card>
+              </motion.div>
             );
           })}
         </motion.div>
@@ -329,7 +372,7 @@ const Portfolio: React.FC = () => {
         </AnimatePresence>
       </div>
 
-      
+
     </div>
   );
 };

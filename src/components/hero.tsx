@@ -3,9 +3,10 @@ import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 import { motion } from "framer-motion";
 import me from "../assets/modele/me.png";
-import { FaGithub, FaLinkedin, FaEnvelope, FaDownload,FaWhatsapp } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaEnvelope, FaDownload, FaWhatsapp } from 'react-icons/fa';
 import { useNavigate } from "react-router-dom";
 import cvPdf from "../assets/modele/pdf/FabriceRandrianaivo_JS_2025_CV.pdf";
+import { Button } from "@/components/ui/button";
 
 const Hero: React.FC = () => {
   const particlesInit = async (main: any) => {
@@ -137,13 +138,24 @@ const Hero: React.FC = () => {
             </motion.p>
 
             <motion.div variants={itemVariants} className="cta-buttons">
-              <a className="btn btn-primary" href={cvPdf} target="_blank" rel="noopener noreferrer" download>
-                <FaDownload className="btn-icon" />
-                Download CV
-              </a>
-              <button className="btn btn-secondary" onClick={handleViewProjects}>
+              <Button
+                variant="gradient"
+                size="lg"
+                asChild
+              >
+                <a href={cvPdf} target="_blank" rel="noopener noreferrer" download>
+                  <FaDownload className="mr-2" />
+                  Download CV
+                </a>
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={handleViewProjects}
+                className="border-2 border-cyan-400 text-cyan-400 hover:bg-cyan-400/10"
+              >
                 View Projects
-              </button>
+              </Button>
             </motion.div>
 
             <motion.div variants={itemVariants} className="social-links">
