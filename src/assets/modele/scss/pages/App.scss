@@ -10,66 +10,60 @@
 @tailwind components;
 @tailwind utilities;
 
-.contenair_app{
-    background-image: url("../../images/bg.webp");
-    background-repeat: repeat;
-    background-size: cover;
-    backdrop-filter: blur(175px) !important;
-    height: 100vh;
-    .filtre_app{
-        background-color: rgba(29, 23, 82, 0.357);
-        backdrop-filter: blur(2px);
-        height: 100vh;
+.contenair_app {
+    min-height: 100vh;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    transition: background-color 0.3s ease, color 0.3s ease;
+
+    .filtre_app {
+        min-height: 100vh;
+        width: 100%;
     }
 }
 
 // Classe pour le thème clair
 .theme-light {
-    background-color: $light-background;
-    color: $light-text-color;
+    --background: 210 40% 98%;
+    --foreground: 222.2 84% 4.9%;
+
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+
     li a {
-        color: $light-text-color;
+        color: hsl(var(--foreground));
     }
-    .nav{
-        background: #000;        
-    }
-    .hero{
+}
 
-    }
-    .about{
+// Classe pour le thème sombre
+.theme-dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
 
-    }
-    .contact{
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
 
-    }
-    .project{
-
-    }
-  }
-  
-  // Classe pour le thème sombre
-  .theme-dark {
-    background-color: $dark-background;
-    color: $dark-text-color;
     li a {
-        color: $dark-text-color;
+        color: hsl(var(--foreground));
     }
-  }
+}
 
-  .not-fund{
+.not-fund {
     display: flex;
     flex-direction: column;
     font-style: oblique;
     height: 100vh;
-    width: 100wh;
+    width: 100%;
     text-align: center;
     align-items: center;
     color: orangered;
     justify-content: center;
-    p{
+
+    p {
         font-size: 5rem;
     }
-    .iconsNotFund{
+
+    .iconsNotFund {
         font-size: 10rem;
     }
-  }
+}

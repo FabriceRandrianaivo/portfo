@@ -10,6 +10,7 @@ import './assets/modele/scss/pages/App.scss';
 import Hero from "./components/hero";
 // import About from "./pages/about";
 import Project from "./pages/portfo";
+import ProjectsV2 from "./pages/projects-v2";
 // import Contact from "./pages/contact";
 import NotFund from "./pages/notFund"
 import SocialMediaLinks from './components/navReseau';
@@ -36,11 +37,12 @@ const App: React.FC = () => {
         {/* <SocialMediaLinks/> */}
       </header>
       <Routes>
-        <Route path="/" element={<Hero/>} />
-        <Route path="/project" element={<Project theme={isDarkTheme} />} />
+        <Route path="/" element={<Hero />} />
+        <Route path="/project" element={<Project />} />
+        <Route path="/projects-v2" element={<ProjectsV2 />} />
         {/* <Route path="/about" element={<About />} /> */}
         {/* <Route path="/contact" element={<Contact />} /> */}
-        <Route path="*" element={<NotFund/>} />
+        <Route path="*" element={<NotFund />} />
       </Routes>
     </Router>
   );
