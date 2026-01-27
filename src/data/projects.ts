@@ -8,6 +8,7 @@ import Hologram from "../assets/modele/images/Hologramme1.png";
 import FlowDepense from "../assets/modele/images/Flow-depense-portfo.png";
 import Cosynight from "../assets/modele/images/Cosynight-portfo.png"
 import Externam from "../assets/modele/images/crm-externam.png"
+// import EVanille from "../assets/modele/images/e-vanille.png"
 
 export interface Project {
 	year: number;
@@ -24,6 +25,21 @@ export interface Project {
 export type ProjectReadonly = Readonly<Project>;
 
 export const projects: ReadonlyArray<ProjectReadonly> = [
+	{
+		year: 2026,
+		name: "e-vanille",
+		company: "Projet Client Freelance",
+		description: "Plateforme e-commerce haut de gamme spécialisée dans la vente de vanille. Gestion complète du catalogue, du panier et du processus de paiement sécurisé.",
+		technologies: ["Next.js 14", "TypeScript", "Tailwind CSS", "Prisma", "PostgreSQL", "Stripe", "NextAuth.js", "Cloudinary", "Zustand"],
+		link: ["e-vanille.vercel.app"],
+		img: "EVanille", 
+		post: [
+			"Développeur Freelance : Conception de l'architecture Fullstack avec Next.js (App Router)",
+			"Intégration d'un système de paiement sécurisé avec Stripe API",
+			"Modélisation de la base de données relationnelle avec Prisma et PostgreSQL",
+			"Optimisation du SEO et de la performance (Core Web Vitals) pour le commerce en ligne"
+		],
+	},
 	{
 		year: 2026,
 		name: "Externam CRM",
