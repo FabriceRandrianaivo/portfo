@@ -6,6 +6,8 @@ import LogoEvoyazy from "../assets/modele/images/e-voyazy.png";
 import LogoRedPy from "../assets/modele/images/redpy.jpeg";
 import Hologram from "../assets/modele/images/Hologramme1.png";
 import FlowDepense from "../assets/modele/images/Flow-depense-portfo.png";
+import Cosynight from "../assets/modele/images/Cosynight-portfo.png"
+import Externam from "../assets/modele/images/crm-externam.png"
 
 export interface Project {
 	year: number;
@@ -25,11 +27,11 @@ export const projects: ReadonlyArray<ProjectReadonly> = [
 	{
 		year: 2026,
 		name: "Externam CRM",
-		company: "Externam Studio",
+		company: "LeChaSur (Externam Studio)",
 		description: "Custom CRM & Project Management System for Video Editing/Coaching Agency. Designed to streamline the entire client lifecycle efficiently.",
 		technologies: ["Nuxt 3", "TypeScript", "Tailwind CSS", "MongoDB", "Pinia", "Socket.io", "Meta Graph API", "Calendly", "Markups", "Fabric.js", "shadcn/ui", ""],
 		link: ["crm.externam.com"],
-		img: "",
+		img: Externam,
 		post: [
 			"Fullstack Developer: Architected entire Nuxt 3 application with complex backend logic",
 			"Implemented lead tracking via Meta Graph API and sales scheduling with Calendly",
@@ -40,11 +42,11 @@ export const projects: ReadonlyArray<ProjectReadonly> = [
 	{
 		year: 2026,
 		name: "CosyNight / RentFlow",
-		company: "Client Project",
+		company: "Client Project (Cosynight.fr)",
 		description: "SaaS platform automating rent receipt generation, sending, and archiving to reduce administrative load and centralize accounting history.",
 		technologies: ["Next.js", "TypeScript", "Tailwind CSS", "Node.js", "PDF Viewer", "Vercel", "SMTP Provider", "Postgres/MySQL"],
 		link: ["rentflow-cosynight.vercel.app"],
-		img: "",
+		img: Cosynight,
 		post: [
 			"Lead Project Manager & Frontend/Backend Developer (End-to-End CRM)",
 			"Designed functional specifications, software architecture, and data models",
@@ -68,20 +70,20 @@ export const projects: ReadonlyArray<ProjectReadonly> = [
 			"Built interactive statistics dashboards with fl_chart"
 		],
 	},
-	{
-		year: 2026,
-		name: "LeChaSur",
-		company: "LeChaSur (Professional)",
-		description: "Contributing to premium web applications and CRM systems for specialized real estate management.",
-		technologies: ["Prisma", "Next.js", "TypeScript", "Nuxt.js", "Node.js", "Tailwind CSS"],
-		link: [],
-		img: "",
-		post: [
-			"Full-Stack Developer: architecting and developing core features for client management",
-			"Implementing complex state management and real-time features",
-			"Optimizing web performance and SEO for enterprise portals"
-		],
-	},
+	// {
+	// 	year: 2026,
+	// 	name: "LeChaSur",
+	// 	company: "LeChaSur (Professional)",
+	// 	description: "Contributing to premium web applications and CRM systems for specialized real estate management.",
+	// 	technologies: ["Prisma", "Next.js", "TypeScript", "Nuxt.js", "Node.js", "Tailwind CSS"],
+	// 	link: [],
+	// 	img: "",
+	// 	post: [
+	// 		"Full-Stack Developer: architecting and developing core features for client management",
+	// 		"Implementing complex state management and real-time features",
+	// 		"Optimizing web performance and SEO for enterprise portals"
+	// 	],
+	// },
 	{
 		year: 2025,
 		name: "Hologram AI",
