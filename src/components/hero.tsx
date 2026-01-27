@@ -3,9 +3,15 @@ import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 import { motion } from "framer-motion";
 import me from "../assets/modele/me.png";
-import { FaGithub, FaLinkedin, FaEnvelope, FaDownload,FaWhatsapp } from 'react-icons/fa';
+import {
+  FaGithub,
+  FaLinkedin,
+  FaEnvelope,
+  FaDownload,
+  FaWhatsapp,
+} from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import cvPdf from "../assets/modele/pdf/FabriceRandrianaivo_JS_2025_CV.pdf";
+import cvPdf from "../assets/modele/pdf/FabriceRandrianaivo_CV_2026.pdf";
 
 const Hero: React.FC = () => {
   const particlesInit = async (main: any) => {
@@ -17,11 +23,11 @@ const Hero: React.FC = () => {
     "FullStack Developer",
     "Data Scientist",
     "UI/UX Designer",
-    "Problem Solver"
+    "Problem Solver",
   ];
 
   const navigate = useNavigate();
-  const handleViewProjects = () => navigate('/project');
+  const handleViewProjects = () => navigate("/project");
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -36,9 +42,9 @@ const Hero: React.FC = () => {
       opacity: 1,
       transition: {
         staggerChildren: 0.3,
-        delayChildren: 0.2
-      }
-    }
+        delayChildren: 0.2,
+      },
+    },
   };
 
   const itemVariants = {
@@ -48,9 +54,9 @@ const Hero: React.FC = () => {
       opacity: 1,
       transition: {
         duration: 0.8,
-        ease: "easeOut"
-      }
-    }
+        ease: "easeOut",
+      },
+    },
   };
 
   const imageVariants = {
@@ -60,9 +66,9 @@ const Hero: React.FC = () => {
       opacity: 1,
       transition: {
         duration: 1,
-        ease: "easeOut"
-      }
-    }
+        ease: "easeOut",
+      },
+    },
   };
 
   return (
@@ -82,7 +88,7 @@ const Hero: React.FC = () => {
               distance: 150,
               color: "#64ffda",
               opacity: 0.4,
-              width: 1
+              width: 1,
             },
             move: {
               enable: true,
@@ -91,18 +97,18 @@ const Hero: React.FC = () => {
               random: false,
               straight: false,
               out_mode: "out",
-              bounce: false
-            }
+              bounce: false,
+            },
           },
           interactivity: {
             detect_on: "canvas",
             events: {
               onhover: { enable: true, mode: "repulse" },
               onclick: { enable: true, mode: "push" },
-              resize: true
-            }
+              resize: true,
+            },
           },
-          retina_detect: true
+          retina_detect: true,
         }}
       />
 
@@ -125,38 +131,59 @@ const Hero: React.FC = () => {
 
             <motion.div variants={itemVariants} className="title-container">
               <span className="static-text">I'm a </span>
-              <span className="dynamic-text">
-                {texts[currentText]}
-              </span>
+              <span className="dynamic-text">{texts[currentText]}</span>
               <span className="cursor">|</span>
             </motion.div>
 
             <motion.p variants={itemVariants} className="description">
-              Passionate about creating innovative digital solutions and turning ideas into reality.
-              I specialize in full-stack development, data science, and building user-centric applications.
+              Passionate about creating innovative digital solutions and turning
+              ideas into reality. I specialize in full-stack development, data
+              science, and building user-centric applications.
             </motion.p>
 
             <motion.div variants={itemVariants} className="cta-buttons">
-              <a className="btn btn-primary" href={cvPdf} target="_blank" rel="noopener noreferrer" download>
+              <a
+                className="btn btn-primary"
+                href={cvPdf}
+                target="_blank"
+                rel="noopener noreferrer"
+                download
+              >
                 <FaDownload className="btn-icon" />
                 Download CV
               </a>
-              <button className="btn btn-secondary" onClick={handleViewProjects}>
+              <button
+                className="btn btn-secondary"
+                onClick={handleViewProjects}
+              >
                 View Projects
               </button>
             </motion.div>
 
             <motion.div variants={itemVariants} className="social-links">
-              <a href="https://github.com/FabriceRandrianaivo" target="_blank" rel="noopener noreferrer" className="social-link">
+              <a
+                href="https://github.com/FabriceRandrianaivo"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-link"
+              >
                 <FaGithub />
               </a>
-              <a href="https://www.linkedin.com/in/fabrice-randrianaivo" target="_blank" rel="noopener noreferrer" className="social-link">
+              <a
+                href="https://www.linkedin.com/in/fabrice-randrianaivo"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-link"
+              >
                 <FaLinkedin />
               </a>
-              <a href="mailto:fabrice-randrianaivo8@gmail.com" className="social-link">
+              <a
+                href="mailto:fabricerandrianaivo8@gmail.com"
+                className="social-link"
+              >
                 <FaEnvelope />
               </a>
-              <a href="https://wa.me/+261328454355" className="social-link">
+              <a href="https://wa.me/+261347865670" className="social-link">
                 <FaWhatsapp />
               </a>
             </motion.div>
@@ -174,7 +201,9 @@ const Hero: React.FC = () => {
               <div className="floating-card">
                 <div className="card-content">
                   <span className="card-icon">🚀</span>
-                  <span className="card-text">Available for new opportunities</span>
+                  <span className="card-text">
+                    Available for new opportunities
+                  </span>
                 </div>
               </div>
             </div>

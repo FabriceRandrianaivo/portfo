@@ -4,6 +4,8 @@ import LogoJupiter from "../assets/modele/images/Jupiter-logo.jpeg";
 import LogoFoodStack from "../assets/modele/images/food-track.png";
 import LogoEvoyazy from "../assets/modele/images/e-voyazy.png";
 import LogoRedPy from "../assets/modele/images/redpy.jpeg";
+import Hologram from "../assets/modele/images/Hologramme1.png";
+import FlowDepense from "../assets/modele/images/Flow-depense-portfo.png";
 
 export interface Project {
 	year: number;
@@ -21,10 +23,84 @@ export type ProjectReadonly = Readonly<Project>;
 
 export const projects: ReadonlyArray<ProjectReadonly> = [
 	{
+		year: 2026,
+		name: "Externam CRM",
+		company: "Externam Studio",
+		description: "Custom CRM & Project Management System for Video Editing/Coaching Agency. Designed to streamline the entire client lifecycle efficiently.",
+		technologies: ["Nuxt 3", "TypeScript", "Tailwind CSS", "MongoDB", "Pinia", "Socket.io", "Meta Graph API", "Calendly", "Markups", "Fabric.js", "shadcn/ui", ""],
+		link: ["crm.externam.com"],
+		img: "",
+		post: [
+			"Fullstack Developer: Architected entire Nuxt 3 application with complex backend logic",
+			"Implemented lead tracking via Meta Graph API and sales scheduling with Calendly",
+			"Developed premium responsive UI using Shadcn/Tailwind",
+			"Managed DevOps/Config (LWS/Vercel, S3 storage, Security)"
+		],
+	},
+	{
+		year: 2026,
+		name: "CosyNight / RentFlow",
+		company: "Client Project",
+		description: "SaaS platform automating rent receipt generation, sending, and archiving to reduce administrative load and centralize accounting history.",
+		technologies: ["Next.js", "TypeScript", "Tailwind CSS", "Node.js", "PDF Viewer", "Vercel", "SMTP Provider", "Postgres/MySQL"],
+		link: ["rentflow-cosynight.vercel.app"],
+		img: "",
+		post: [
+			"Lead Project Manager & Frontend/Backend Developer (End-to-End CRM)",
+			"Designed functional specifications, software architecture, and data models",
+			"Implemented complete platform (Front + Back) with business workflows for tenants/owners",
+			"Automated compliant PDF generation via custom templates and email dispatch",
+			"Optimized UX for accounting and administrative usage"
+		],
+	},
+	{
+		year: 2026,
+		name: "Flow Dépenses",
+		company: "Personal Project",
+		description: "Mobile application for daily expense tracking, budget management, and geographical visualization of spending locations.",
+		technologies: ["Flutter", "Dart", "SQLite", "Google Maps API", "Provider", "fl_chart"],
+		link: ["github.com/FabriceRandrianaivo"],
+		img: FlowDepense,
+		post: [
+			"Lead Developer: technical design and modular architecture",
+			"Implemented local-first storage using SQLite with a repository pattern",
+			"Integrated Google Maps for real-time expenditure geolocalization",
+			"Built interactive statistics dashboards with fl_chart"
+		],
+	},
+	{
+		year: 2026,
+		name: "LeChaSur",
+		company: "LeChaSur (Professional)",
+		description: "Contributing to premium web applications and CRM systems for specialized real estate management.",
+		technologies: ["Prisma", "Next.js", "TypeScript", "Nuxt.js", "Node.js", "Tailwind CSS"],
+		link: [],
+		img: "",
+		post: [
+			"Full-Stack Developer: architecting and developing core features for client management",
+			"Implementing complex state management and real-time features",
+			"Optimizing web performance and SEO for enterprise portals"
+		],
+	},
+	{
+		year: 2025,
+		name: "Hologram AI",
+		company: "Personal Project",
+		description: "An innovative AI-powered 3D hologram project with real-time vocal and visual interaction.",
+		technologies: ["React", "TypeScript", "Three.js", "OpenAI API", "Vercel", "Motion"],
+		link: ["hologramme3d.vercel.app"],
+		img: Hologram,
+		post: [
+			"Lead Developer: built the 3D rendering engine and AI logic",
+			"Integrated OpenAI API for intelligent conversation and animation control",
+			"Optimized holographic projection displays for web browsers",
+			"Deployed on Vercel for high-availability access"
+		],
+	},
+	{
 		year: 2025,
 		name: "RedPy AI",
 		company: "Personal Project",
-		// category: "Web App / AI",
 		description: "AI-powered platform for interactive Python code execution, visualization, and learning.",
 		technologies: ["React","TypeScript","Redux","Sass","Python","Docker","OpenAI API","Vercel","MUI","Material UI","Motion"],
 		link: ["redpy-ai.vercel.app"],
