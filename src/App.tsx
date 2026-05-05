@@ -1,50 +1,117 @@
-import React, { useEffect, useState } from 'react';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-} from 'react-router-dom';
-// import Homepage from './pages/home';
-import TopHeader from './components/topHeader';
-import './assets/modele/scss/pages/App.scss';
-import Hero from "./components/hero";
-// import About from "./pages/about";
-import Project from "./pages/portfo";
+import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
+import TopHeader from "./components/topHeader";
+import Footer from "./components/footer";
+import "./assets/modele/scss/pages/App.scss";
+import Home from "./pages/home";
+import About from "./pages/about";
+import Skills from "./pages/skills";
+import Experience from "./pages/experience";
+import ProjectsLegacy from "./pages/portfo";
 import ProjectsV2 from "./pages/projects-v2";
-// import Contact from "./pages/contact";
-import NotFund from "./pages/notFund"
-import SocialMediaLinks from './components/navReseau';
+import Contact from "./pages/contact";
+import NotFund from "./pages/notFund";
+import { LanguageProvider } from "./lib/LanguageContext";
+
+const pageTransition = {
+  initial: { opacity: 0, y: 12 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -12 },
+  transition: { duration: 0.3 },
+};
+
+const AnimatedRoutes: React.FC = () => {
+  const location = useLocation();
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route
+          path="/"
+          element={
+            <motion.div {...pageTransition}>
+              <Home />
+            </motion.div>
+          }
+        />
+        <Route
+          path="/about"
+          element={
+            <motion.div {...pageTransition}>
+              <About />
+            </motion.div>
+          }
+        />
+        <Route
+          path="/skills"
+          element={
+            <motion.div {...pageTransition}>
+              <Skills />
+            </motion.div>
+          }
+        />
+        <Route
+          path="/experience"
+          element={
+            <motion.div {...pageTransition}>
+              <Experience />
+            </motion.div>
+          }
+        />
+        <Route
+          path="/project"
+          element={
+            <motion.div {...pageTransition}>
+              <ProjectsLegacy />
+            </motion.div>
+          }
+        />
+        <Route
+          path="/projects-v2"
+          element={
+            <motion.div {...pageTransition}>
+              <ProjectsV2 />
+            </motion.div>
+          }
+        />
+        <Route
+          path="/contact"
+          element={
+            <motion.div {...pageTransition}>
+              <Contact />
+            </motion.div>
+          }
+        />
+        <Route path="*" element={<NotFund />} />
+      </Routes>
+    </AnimatePresence>
+  );
+};
 
 const App: React.FC = () => {
   const [isDarkTheme, setIsDarkTheme] = useState<boolean>(true);
 
   useEffect(() => {
     const body = document.body;
-    // Appliquer la classe en fonction du thème choisi
     if (isDarkTheme) {
-      body.classList.add('theme-dark');
-      body.classList.remove('theme-light');
+      body.classList.add("theme-dark");
+      body.classList.remove("theme-light");
     } else {
-      body.classList.add('theme-light');
-      body.classList.remove('theme-dark');
+      body.classList.add("theme-light");
+      body.classList.remove("theme-dark");
     }
   }, [isDarkTheme]);
 
   return (
-    <Router>
-      <header>
+    <LanguageProvider>
+      <Router>
         <TopHeader theme={isDarkTheme} setTheme={setIsDarkTheme} />
-        {/* <SocialMediaLinks/> */}
-      </header>
-      <Routes>
-        <Route path="/" element={<Hero />} />
-        <Route path="/project" element={<Project />} />
-        <Route path="/projects-v2" element={<ProjectsV2 />} />
-        {/* <Route path="/about" element={<About />} /> */}
-        {/* <Route path="/contact" element={<Contact />} /> */}
-        <Route path="*" element={<NotFund />} />
-      </Routes>
-    </Router>
+        <main className="min-h-screen">
+          <AnimatedRoutes />
+        </main>
+        <Footer />
+      </Router>
+    </LanguageProvider>
   );
 };
 
