@@ -8,11 +8,12 @@ import Home from "./pages/home";
 import About from "./pages/about";
 import Skills from "./pages/skills";
 import Experience from "./pages/experience";
-import ProjectsLegacy from "./pages/portfo";
 import ProjectsV2 from "./pages/projects-v2";
 import Contact from "./pages/contact";
 import NotFund from "./pages/notFund";
 import { LanguageProvider } from "./lib/LanguageContext";
+import { LenisProvider } from "./components/lenis-provider";
+import ClickSpark from "./components/ui/clickSpark";
 
 const pageTransition = {
   initial: { opacity: 0, y: 12 },
@@ -59,14 +60,6 @@ const AnimatedRoutes: React.FC = () => {
           }
         />
         <Route
-          path="/project"
-          element={
-            <motion.div {...pageTransition}>
-              <ProjectsLegacy />
-            </motion.div>
-          }
-        />
-        <Route
           path="/projects-v2"
           element={
             <motion.div {...pageTransition}>
@@ -89,7 +82,7 @@ const AnimatedRoutes: React.FC = () => {
 };
 
 const App: React.FC = () => {
-  const [isDarkTheme, setIsDarkTheme] = useState<boolean>(true);
+  const [isDarkTheme, setIsDarkTheme] = useState<boolean>(false);
 
   useEffect(() => {
     const body = document.body;
@@ -104,13 +97,17 @@ const App: React.FC = () => {
 
   return (
     <LanguageProvider>
-      <Router>
-        <TopHeader theme={isDarkTheme} setTheme={setIsDarkTheme} />
-        <main className="min-h-screen">
-          <AnimatedRoutes />
-        </main>
-        <Footer />
-      </Router>
+      <LenisProvider>
+        <ClickSpark sparkColor="#6E93AE" sparkSize={12} sparkRadius={18} sparkCount={8} duration={400} easing="ease-out">
+          <Router>
+            <TopHeader theme={isDarkTheme} setTheme={setIsDarkTheme} />
+            <main className="min-h-screen bg-cream text-charcoal">
+              <AnimatedRoutes />
+            </main>
+            <Footer />
+          </Router>
+        </ClickSpark>
+      </LenisProvider>
     </LanguageProvider>
   );
 };

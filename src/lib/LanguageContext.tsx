@@ -13,11 +13,11 @@ interface LanguageContextValue {
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 const detectInitial = (): Lang => {
-	if (typeof window === "undefined") return "en";
+	if (typeof window === "undefined") return "fr";
 	const stored = window.localStorage.getItem(STORAGE_KEY) as Lang | null;
 	if (stored === "fr" || stored === "en") return stored;
 	const navLang = window.navigator.language?.toLowerCase() ?? "";
-	return navLang.startsWith("fr") ? "fr" : "en";
+	return navLang.startsWith("en") ? "en" : "fr";
 };
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {

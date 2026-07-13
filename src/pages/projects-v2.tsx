@@ -1,370 +1,351 @@
 import React, { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { projects } from "../data/projects";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { useLang } from "@/lib/LanguageContext";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { CardContainer, CardBody, CardItem } from "@/components/ui/3d-card";
+import ProjectImage from "@/components/ui/projectImage";
 import {
-  ExternalLink,
-  Github,
-  Building2,
-  User,
-  Sparkles,
-  Star,
-  Search,
+	ExternalLink,
+	Github,
+	Star,
+	Search,
+	ArrowUpRight,
+	Lock,
+	Building2,
+	ListChecks,
+	Layers,
+	LinkIcon,
+	Eye,
 } from "lucide-react";
-import { Input } from "@/components/ui/input";
+
+type SortMode = "recent" | "oldest" | "name";
 
 const ProjectsV2: React.FC = () => {
-  const [activeCategory, setActiveCategory] = useState<string>("All");
-  const [search, setSearch] = useState<string>("");
-  const [showFeaturedOnly, setShowFeaturedOnly] = useState<boolean>(false);
-  const { t } = useLang();
+	const [activeCategory, setActiveCategory] = useState<string>("All");
+	const [search, setSearch] = useState<string>("");
+	const [showFeaturedOnly, setShowFeaturedOnly] = useState<boolean>(false);
+	const [sortMode, setSortMode] = useState<SortMode>("recent");
+	const { t, lang } = useLang();
 
-  const categories = useMemo(() => {
-    const set = new Set<string>(["All"]);
-    projects.forEach((p) => {
-      if (p.category) set.add(p.category);
-    });
-    return Array.from(set);
-  }, []);
+	const categories = useMemo(() => {
+		const set = new Set<string>(["All"]);
+		projects.forEach((p) => p.category && set.add(p.category));
+		return Array.from(set);
+	}, []);
 
-  const filteredProjects = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    return projects.filter((p) => {
-      if (showFeaturedOnly && !p.featured) return false;
-      if (activeCategory !== "All" && p.category !== activeCategory) return false;
-      if (!q) return true;
-      const haystack = [
-        p.name,
-        p.company,
-        p.description || "",
-        p.category || "",
-        ...(p.technologies || []),
-      ]
-        .join(" ")
-        .toLowerCase();
-      return haystack.includes(q);
-    });
-  }, [search, activeCategory, showFeaturedOnly]);
+	const filtered = useMemo(() => {
+		const q = search.trim().toLowerCase();
+		const list = projects.filter((p) => {
+			if (showFeaturedOnly && !p.featured) return false;
+			if (activeCategory !== "All" && p.category !== activeCategory) return false;
+			if (!q) return true;
+			return [p.name, p.company, p.description?.[lang] || "", p.category || "", ...(p.technologies || [])]
+				.join(" ")
+				.toLowerCase()
+				.includes(q);
+		});
+		const sorted = [...list];
+		if (sortMode === "recent") sorted.sort((a, b) => b.year - a.year);
+		else if (sortMode === "oldest") sorted.sort((a, b) => a.year - b.year);
+		else sorted.sort((a, b) => a.name.localeCompare(b.name));
+		return sorted;
+	}, [search, activeCategory, showFeaturedOnly, sortMode]);
 
-  return (
-    <div className="relative min-h-screen overflow-hidden bg-background pb-24 pt-28">
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute -top-32 left-0 h-[400px] w-[400px] rounded-full bg-cyan-500/15 blur-[120px]" />
-        <div className="absolute bottom-0 right-0 h-[400px] w-[400px] rounded-full bg-purple-500/15 blur-[120px]" />
-      </div>
+	return (
+		<div className="relative min-h-screen bg-cream pb-24 pt-28 text-charcoal">
+			<div className="mx-auto max-w-7xl px-6 lg:px-8">
+				{/* header */}
+				<motion.div
+					initial={{ opacity: 0, y: 20 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.5 }}
+				>
+					<p className="font-mono text-xs uppercase tracking-[0.25em] text-lime">
+						{t("projects.eyebrow")}
+					</p>
+					<h1 className="mt-3 text-4xl font-bold tracking-tight md:text-6xl">
+						{t("projects.title.before")}{" "}
+						<span className="text-lime">{t("projects.title.gradient")}</span>
+					</h1>
+					<p className="mt-4 max-w-2xl text-charcoal/60">{t("projects.subtitle")}</p>
+				</motion.div>
 
-      <div className="mx-auto max-w-7xl space-y-12 px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-center"
-        >
-          <Badge
-            variant="outline"
-            className="mb-4 border-cyan-400/30 bg-cyan-400/10 text-cyan-300"
-          >
-            {t("projects.eyebrow")}
-          </Badge>
-          <h1 className="text-4xl font-extrabold tracking-tight md:text-6xl">
-            {t("projects.title.before")}{" "}
-            <span className="bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-500 bg-clip-text text-transparent">
-              {t("projects.title.gradient")}
-            </span>
-          </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-muted-foreground md:text-lg">
-            {t("projects.subtitle")}
-          </p>
-        </motion.div>
+				{/* controls */}
+				<div className="mt-10 space-y-5">
+					<div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+						<div className="relative flex-1 md:max-w-sm">
+							<Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-charcoal/40" />
+							<input
+								value={search}
+								onChange={(e) => setSearch(e.target.value)}
+								placeholder={t("projects.search")}
+								className="w-full rounded-full border border-charcoal/15 bg-white py-2.5 pl-10 pr-4 text-sm text-charcoal outline-none transition focus:border-lime"
+							/>
+						</div>
+						<div className="flex items-center gap-3">
+							<div className="flex items-center gap-2">
+								<span className="font-mono text-xs uppercase tracking-widest text-charcoal/45">
+									{t("common.sort")}
+								</span>
+								<select
+									value={sortMode}
+									onChange={(e) => setSortMode(e.target.value as SortMode)}
+									className="rounded-full border border-charcoal/15 bg-white px-3 py-1.5 text-sm text-charcoal outline-none transition focus:border-lime"
+								>
+									<option value="recent">{t("common.sortRecent")}</option>
+									<option value="oldest">{t("common.sortOldest")}</option>
+									<option value="name">{t("common.sortName")}</option>
+								</select>
+							</div>
+							<button
+								onClick={() => setShowFeaturedOnly((v) => !v)}
+								className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-xs font-semibold transition ${
+									showFeaturedOnly
+										? "border-lime bg-lime text-white"
+										: "border-charcoal/15 text-charcoal/60 hover:border-lime hover:text-lime"
+								}`}
+							>
+								<Star className="h-3.5 w-3.5" />
+								{t("common.featuredOnly")}
+							</button>
+						</div>
+					</div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
-          className="space-y-4 rounded-2xl border border-white/10 bg-white/[0.02] p-4 backdrop-blur"
-        >
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <div className="relative flex-1 md:max-w-md">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder={t("projects.search")}
-                className="pl-9"
-              />
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setShowFeaturedOnly((v) => !v)}
-                className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium transition ${
-                  showFeaturedOnly
-                    ? "border-amber-400/40 bg-amber-400/10 text-amber-300"
-                    : "border-white/10 bg-white/[0.02] text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <Star className="h-3.5 w-3.5" />
-                {t("common.featuredOnly")}
-              </button>
-              <span className="text-xs text-muted-foreground">
-                {filteredProjects.length}{" "}
-                {filteredProjects.length !== 1 ? t("common.results") : t("common.result")}
-              </span>
-            </div>
-          </div>
+					<div className="flex flex-wrap items-center gap-2">
+						{categories.map((c) => {
+							const active = activeCategory === c;
+							return (
+								<button
+									key={c}
+									onClick={() => setActiveCategory(c)}
+									className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition ${
+										active
+											? "bg-charcoal text-white"
+											: "border border-charcoal/15 text-charcoal/55 hover:border-lime hover:text-lime"
+									}`}
+								>
+									{c}
+								</button>
+							);
+						})}
+						<span className="ml-auto font-mono text-xs text-charcoal/45">
+							{filtered.length} {filtered.length !== 1 ? t("common.results") : t("common.result")}
+						</span>
+					</div>
+				</div>
 
-          <div className="flex flex-wrap gap-2">
-            {categories.map((c) => {
-              const active = activeCategory === c;
-              return (
-                <button
-                  key={c}
-                  onClick={() => setActiveCategory(c)}
-                  className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${
-                    active
-                      ? "bg-cyan-400/15 text-cyan-300 ring-1 ring-cyan-400/40"
-                      : "border border-white/10 bg-white/[0.02] text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {c}
-                </button>
-              );
-            })}
-          </div>
-        </motion.div>
+				{/* grid */}
+				<div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+					{filtered.map((project) => (
+						<Dialog key={project.name}>
+							<DialogTrigger asChild>
+								<motion.button
+									layout
+									initial={{ opacity: 0, y: 20 }}
+									animate={{ opacity: 1, y: 0 }}
+									transition={{ duration: 0.4 }}
+									className="group relative flex flex-col overflow-hidden rounded-2xl border border-charcoal/10 bg-white text-left shadow-sm transition hover:-translate-y-1 hover:border-lime hover:shadow-xl"
+								>
+									<div className="relative aspect-[16/10] w-full overflow-hidden bg-charcoal/5">
+										<ProjectImage
+											src={project.img}
+											alt={project.name}
+											name={project.name}
+											className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+										/>
+										{project.featured && (
+											<span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-lime px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
+												<Star className="h-3 w-3" /> {t("common.featured")}
+											</span>
+										)}
+										<span className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full bg-white text-lime opacity-0 shadow-md transition group-hover:opacity-100">
+											<ArrowUpRight className="h-4 w-4" />
+										</span>
+									</div>
 
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
-          {filteredProjects.map((project) => (
-            <Dialog key={project.name}>
-              <DialogTrigger asChild>
-                <div className="cursor-pointer">
-                  <CardContainer className="inter-var w-full">
-                    <CardBody className="group/card relative h-auto w-full rounded-xl border border-black/[0.1] bg-gray-50 p-6 dark:border-white/[0.2] dark:bg-black dark:hover:shadow-2xl dark:hover:shadow-cyan-500/[0.1]">
-                      {project.featured && (
-                        <CardItem
-                          translateZ="40"
-                          className="absolute right-4 top-4 inline-flex items-center gap-1 rounded-full border border-amber-400/30 bg-amber-400/10 px-2.5 py-1 text-[10px] font-medium text-amber-300"
-                        >
-                          <Star className="h-3 w-3" />
-                          {t("common.featured")}
-                        </CardItem>
-                      )}
+									<div className="flex flex-1 flex-col gap-2 p-5">
+										<p className="font-mono text-[11px] uppercase tracking-widest text-lime">
+											{project.company}
+										</p>
+										<h3 className="text-lg font-bold">{project.name}</h3>
+										<p className="line-clamp-2 text-sm text-charcoal/55">{project.description?.[lang]}</p>
+										<div className="mt-auto flex flex-wrap gap-1.5 pt-3">
+											{project.technologies.slice(0, 3).map((tech) => (
+												<span
+													key={tech}
+													className="rounded-full bg-charcoal/[0.05] px-2.5 py-0.5 text-[10px] font-medium text-charcoal/60"
+												>
+													{tech}
+												</span>
+											))}
+											{project.technologies.length > 3 && (
+												<span className="rounded-full bg-charcoal/[0.05] px-2.5 py-0.5 text-[10px] font-medium text-charcoal/60">
+													+{project.technologies.length - 3}
+												</span>
+											)}
+										</div>
+									</div>
+								</motion.button>
+							</DialogTrigger>
 
-                      <CardItem
-                        translateZ="50"
-                        className="text-xl font-bold text-neutral-600 dark:text-white"
-                      >
-                        {project.name}
-                      </CardItem>
+							<DialogContent className="max-w-3xl border-charcoal/10 bg-cream p-0 text-charcoal">
+								<ScrollArea className="max-h-[85vh]">
+									{/* Preview — galerie style Play Store (tous projets) */}
+									{project.screenshots && project.screenshots.length > 0 ? (
+										<div className="border-b border-charcoal/10 bg-charcoal/[0.04] p-5">
+											{project.screenshots.length === 1 ? (
+												<img
+													src={project.screenshots[0]}
+													alt={project.name}
+													className="max-h-[440px] w-full rounded-xl border border-charcoal/10 object-cover"
+												/>
+											) : (
+												<div className="flex gap-3 overflow-x-auto pb-2">
+													{project.screenshots.map((src, i) => (
+														<img
+															key={i}
+															src={src}
+															alt={`${project.name} — ${i + 1}`}
+															loading="lazy"
+															className="h-72 w-auto shrink-0 rounded-xl border border-charcoal/10 bg-white object-contain shadow-sm"
+														/>
+													))}
+												</div>
+											)}
+										</div>
+									) : (
+										<div className="relative aspect-[21/9] w-full overflow-hidden bg-charcoal/5">
+											<ProjectImage
+												src={project.img}
+												alt={project.name}
+												name={project.name}
+												className="h-full w-full object-cover"
+											/>
+										</div>
+									)}
 
-                      <CardItem
-                        as="p"
-                        translateZ="55"
-                        className="mt-1 text-xs uppercase tracking-[0.18em] text-cyan-500/90 dark:text-cyan-300"
-                      >
-                        {project.company}
-                      </CardItem>
+									<div className="space-y-7 p-6 md:p-8">
+										<DialogHeader>
+											<div className="flex flex-wrap items-center gap-2">
+												<span className="rounded-full bg-lime px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
+													{project.year}
+												</span>
+												{project.category && (
+													<span className="rounded-full border border-charcoal/15 px-2.5 py-1 text-[10px] uppercase tracking-wide text-charcoal/55">
+														{project.category}
+													</span>
+												)}
+											</div>
+											<DialogTitle className="mt-3 text-3xl font-bold tracking-tight">
+												{project.name}
+											</DialogTitle>
+										</DialogHeader>
 
-                      <CardItem
-                        as="p"
-                        translateZ="60"
-                        className="mt-3 max-w-sm text-sm text-neutral-500 dark:text-neutral-300"
-                      >
-                        {project.description}
-                      </CardItem>
+										{/* Overview */}
+										<div>
+											<h4 className="mb-2 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-lime">
+												<Eye className="h-4 w-4" /> {t("common.overview")}
+											</h4>
+											<p className="text-base leading-relaxed text-charcoal/70">
+												{project.description?.[lang]}
+											</p>
+										</div>
 
-                      <CardItem translateZ="100" className="mt-4 w-full">
-                        <img
-                          src={project.img}
-                          height="1000"
-                          width="1000"
-                          className="h-56 w-full rounded-xl object-cover group-hover/card:shadow-xl"
-                          alt={project.name}
-                        />
-                      </CardItem>
+										{/* Role */}
+										<div>
+											<h4 className="mb-2 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-lime">
+												<Building2 className="h-4 w-4" /> {t("common.role")}
+											</h4>
+											<p className="text-base text-charcoal/70">{project.company}</p>
+										</div>
 
-                      <div className="mt-6 flex items-center justify-between">
-                        <CardItem translateZ={20} as="div" className="flex flex-wrap gap-1.5">
-                          {project.technologies.slice(0, 3).map((tech) => (
-                            <Badge key={tech} variant="secondary" className="text-[10px]">
-                              {tech}
-                            </Badge>
-                          ))}
-                          {project.technologies.length > 3 && (
-                            <Badge variant="secondary" className="text-[10px]">
-                              +{project.technologies.length - 3}
-                            </Badge>
-                          )}
-                        </CardItem>
-                        <CardItem
-                          translateZ={20}
-                          as="button"
-                          className="rounded-xl bg-black px-4 py-2 text-xs font-bold text-white dark:bg-white dark:text-black"
-                        >
-                          {t("common.viewDetails")}
-                        </CardItem>
-                      </div>
+										{/* Responsibilities */}
+										<div>
+											<h4 className="mb-2 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-lime">
+												<ListChecks className="h-4 w-4" /> {t("common.responsibilities")}
+											</h4>
+											<ul className="space-y-2">
+												{project.post[lang].map((item, i) => (
+													<li key={i} className="flex gap-2 text-sm text-charcoal/70">
+														<span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-lime" />
+														{item}
+													</li>
+												))}
+											</ul>
+										</div>
 
-                      <CardItem
-                        as="div"
-                        translateZ={10}
-                        className="mt-3 flex items-center gap-3 text-xs text-muted-foreground"
-                      >
-                        <span>{project.year}</span>
-                        {project.category && (
-                          <>
-                            <span>·</span>
-                            <span>{project.category}</span>
-                          </>
-                        )}
-                      </CardItem>
-                    </CardBody>
-                  </CardContainer>
-                </div>
-              </DialogTrigger>
+										{/* Tech stack */}
+										<div>
+											<h4 className="mb-3 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-lime">
+												<Layers className="h-4 w-4" /> {t("common.tech")}
+											</h4>
+											<div className="flex flex-wrap gap-2">
+												{project.technologies.map((tech) => (
+													<span
+														key={tech}
+														className="rounded-full border border-charcoal/15 px-3 py-1 text-xs text-charcoal/70"
+													>
+														{tech}
+													</span>
+												))}
+											</div>
+										</div>
 
-              <DialogContent className="border-cyan-500/20 bg-background/95 backdrop-blur-xl sm:max-w-4xl">
-                <DialogHeader>
-                  <DialogTitle className="flex items-center gap-3 text-3xl font-bold text-cyan-400">
-                    {project.name}
-                    <Badge variant="outline" className="border-muted text-sm font-normal text-muted-foreground">
-                      {project.year}
-                    </Badge>
-                    {project.category && (
-                      <Badge variant="outline" className="border-cyan-400/30 text-xs text-cyan-300">
-                        {project.category}
-                      </Badge>
-                    )}
-                  </DialogTitle>
-                  <DialogDescription className="text-lg text-foreground/80">
-                    {project.description}
-                  </DialogDescription>
-                </DialogHeader>
+										{/* Links */}
+										<div>
+											<h4 className="mb-3 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-lime">
+												<LinkIcon className="h-4 w-4" /> {t("common.links")}
+											</h4>
+											{project.link.length > 0 ? (
+												<div className="flex flex-wrap gap-3">
+													{project.link.map((link, i) => {
+														const isGithub = link.includes("github");
+														return (
+															<a
+																key={i}
+																href={`https://${link}`}
+																target="_blank"
+																rel="noopener noreferrer"
+																className="inline-flex items-center gap-2 rounded-full bg-lime px-5 py-2.5 text-sm font-semibold text-white transition hover:brightness-110"
+															>
+																{isGithub ? (
+																	<Github className="h-4 w-4" />
+																) : (
+																	<ExternalLink className="h-4 w-4" />
+																)}
+																{isGithub ? t("common.viewCode") : t("common.liveDemo")}
+															</a>
+														);
+													})}
+												</div>
+											) : (
+												<div className="inline-flex items-center gap-2 rounded-full border border-charcoal/15 px-4 py-2 font-mono text-xs uppercase tracking-wide text-charcoal/50">
+													<Lock className="h-3.5 w-3.5" /> {t("common.privateProject")}
+												</div>
+											)}
+										</div>
+									</div>
+								</ScrollArea>
+							</DialogContent>
+						</Dialog>
+					))}
+				</div>
 
-                <div className="mt-6 grid gap-8 md:grid-cols-2">
-                  <div className="space-y-6">
-                    <AspectRatio
-                      ratio={16 / 9}
-                      className="overflow-hidden rounded-lg border border-white/10 bg-muted shadow-2xl"
-                    >
-                      <img
-                        src={project.img}
-                        alt={project.name}
-                        className="h-full w-full object-cover"
-                      />
-                    </AspectRatio>
-
-                    <div className="flex flex-wrap gap-3">
-                      {project.link.map((link, i) => {
-                        const isGithub = link.includes("github");
-                        return (
-                          <Button
-                            key={i}
-                            variant="default"
-                            size="lg"
-                            asChild
-                            className="gap-2 bg-cyan-500 font-bold text-black hover:bg-cyan-600"
-                          >
-                            <a
-                              href={`https://${link}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              {isGithub ? (
-                                <Github className="h-5 w-5" />
-                              ) : (
-                                <ExternalLink className="h-5 w-5" />
-                              )}
-                              {isGithub ? t("common.viewCode") : t("common.liveDemo")}
-                            </a>
-                          </Button>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  <ScrollArea className="h-[400px] pr-4">
-                    <div className="space-y-8">
-                      <div>
-                        <h4 className="mb-3 flex items-center gap-2 text-md font-semibold text-cyan-400">
-                          <Building2 className="h-5 w-5" /> {t("common.context")}
-                        </h4>
-                        <p className="text-base text-muted-foreground">{project.company}</p>
-                      </div>
-
-                      <div>
-                        <h4 className="mb-3 flex items-center gap-2 text-md font-semibold text-cyan-400">
-                          <User className="h-5 w-5" /> {t("common.role")}
-                        </h4>
-                        <ul className="list-inside list-disc space-y-2 text-base text-muted-foreground">
-                          {project.post.map((item, i) => (
-                            <li key={i}>{item}</li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      <div>
-                        <h4 className="mb-3 text-md font-semibold text-cyan-400">{t("common.tech")}</h4>
-                        <div className="flex flex-wrap gap-2">
-                          {project.technologies.map((tech) => (
-                            <Badge key={tech} variant="tech" className="px-3 py-1 text-sm">
-                              {tech}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </ScrollArea>
-                </div>
-              </DialogContent>
-            </Dialog>
-          ))}
-        </div>
-
-        {filteredProjects.length === 0 && (
-          <div className="rounded-2xl border border-dashed border-white/10 p-10 text-center text-muted-foreground">
-            {t("common.noMatch")}
-          </div>
-        )}
-
-        <div className="relative mt-16 overflow-hidden rounded-3xl border border-cyan-500/20 bg-gradient-to-br from-cyan-500/10 via-blue-500/5 to-purple-500/10 py-16 text-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="text-3xl font-bold md:text-5xl">{t("projects.cta.title")}</h2>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
-              {t("projects.cta.subtitle")}
-            </p>
-            <Button
-              size="lg"
-              variant="gradient"
-              className="mt-8 px-8 py-6 text-lg"
-              asChild
-            >
-              <a href="/contact">
-                <Sparkles className="mr-2 h-5 w-5" /> {t("projects.cta.button")}
-              </a>
-            </Button>
-          </motion.div>
-        </div>
-      </div>
-    </div>
-  );
+				{filtered.length === 0 && (
+					<div className="mt-12 rounded-2xl border border-dashed border-charcoal/20 p-12 text-center font-mono text-sm text-charcoal/50">
+						{t("common.noMatch")}
+					</div>
+				)}
+			</div>
+		</div>
+	);
 };
 
 export default ProjectsV2;
