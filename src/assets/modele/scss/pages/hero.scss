@@ -5,7 +5,9 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: linear-gradient(135deg, #0a192f 0%, #112240 100%);
+  background: linear-gradient(135deg, #0a192f 0%, #1a2744 50%, #0f2847 100%);
+  background-size: 200% 200%;
+  animation: gradientShift 15s ease infinite;
 
   #tsparticles {
     position: absolute;
@@ -14,6 +16,7 @@
     width: 100%;
     height: 100%;
     z-index: 1;
+    opacity: 0.8;
   }
 }
 
@@ -28,7 +31,7 @@
   padding: 2rem;
   align-items: center;
 
-  
+
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
     gap: 2rem;
@@ -38,11 +41,12 @@
 
 .hero-text-section {
   padding-top: 1rem;
+
   .greeting {
     font-size: 1.2rem;
     color: #64ffda;
     // margin-bottom: 1rem;
-    font-weight: 500; 
+    font-weight: 500;
 
     .wave {
       display: inline-block;
@@ -50,86 +54,86 @@
       margin-right: 0.5rem;
     }
   }
-  
+
   .name {
     font-size: 3.5rem;
     font-weight: 700;
     line-height: 1.1;
     margin-bottom: 1rem;
-    
+
     @media (max-width: 768px) {
       font-size: 2.5rem;
     }
-    
+
     .first-name {
       color: #ccd6f6;
       display: block;
     }
-    
+
     .last-name {
       color: #64ffda;
       display: block;
     }
   }
-  
+
   .title-container {
     font-size: 2rem;
     margin-bottom: 1.5rem;
     height: 2.5rem;
     display: flex;
     align-items: center;
-    
+
     @media (max-width: 768px) {
       font-size: 1.5rem;
       height: 2rem;
       justify-content: center;
     }
-    
+
     .static-text {
       color: #8892b0;
       margin-right: 0.5rem;
     }
-    
+
     .dynamic-text {
       color: #64ffda;
       font-weight: 600;
       min-width: 300px;
-      
+
       @media (max-width: 768px) {
         min-width: 200px;
       }
     }
-    
+
     .cursor {
       color: #64ffda;
       animation: blink 1s infinite;
       margin-left: 0.2rem;
     }
   }
-  
+
   .description {
     font-size: 1.1rem;
     color: #8892b0;
     line-height: 1.6;
     margin-bottom: 2rem;
     max-width: 500px;
-    
+
     @media (max-width: 768px) {
       font-size: 1rem;
       margin: 0 auto 2rem auto;
     }
   }
-  
+
   .cta-buttons {
     display: flex;
     gap: 1rem;
     margin-bottom: 2rem;
-    
+
     @media (max-width: 768px) {
       justify-content: center;
       flex-wrap: wrap;
     }
-    
+
     .btn {
       display: flex;
       align-items: center;
@@ -142,27 +146,27 @@
       transition: all 0.3s ease;
       cursor: pointer;
       border: none;
-      
+
       .btn-icon {
         font-size: 1.1rem;
       }
-      
+
       &.btn-primary {
         background: linear-gradient(135deg, #64ffda 0%, #4fd1c7 100%);
         color: #0a192f;
         box-shadow: 0 4px 15px rgba(100, 255, 218, 0.3);
-        
+
         &:hover {
           transform: translateY(-2px);
           box-shadow: 0 6px 20px rgba(100, 255, 218, 0.4);
         }
       }
-      
+
       &.btn-secondary {
         background: transparent;
         color: #64ffda;
         border: 2px solid #64ffda;
-        
+
         &:hover {
           background: rgba(100, 255, 218, 0.1);
           transform: translateY(-2px);
@@ -170,15 +174,15 @@
       }
     }
   }
-  
+
   .social-links {
     display: flex;
     gap: 1rem;
-    
+
     @media (max-width: 768px) {
       justify-content: center;
     }
-    
+
     .social-link {
       display: flex;
       align-items: center;
@@ -191,7 +195,7 @@
       font-size: 1.2rem;
       transition: all 0.3s ease;
       border: 2px solid transparent;
-      
+
       &:hover {
         background: rgba(100, 255, 218, 0.2);
         border-color: #64ffda;
@@ -206,10 +210,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  
+
   .image-container {
     position: relative;
-    
+
     .hero-image {
       width: 350px;
       height: 350px;
@@ -217,17 +221,17 @@
       object-fit: contain;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
       transition: transform 0.3s ease;
-      
+
       @media (max-width: 768px) {
         width: 280px;
         height: 280px;
       }
-      
+
       &:hover {
         transform: scale(1.05);
       }
     }
-    
+
     .image-background {
       position: absolute;
       top: 20px;
@@ -240,7 +244,7 @@
       opacity: 0.3;
       filter: blur(20px);
     }
-    
+
     .floating-card {
       position: absolute;
       bottom: 20px;
@@ -252,28 +256,28 @@
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
       animation: float 3s ease-in-out infinite;
       max-height: min-content;
-      
+
       @media (max-width: 768px) {
         right: 10px;
         bottom: 10px;
         padding: 0.75rem;
       }
-      
+
       .card-content {
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        
+
         .card-icon {
           font-size: 1.2rem;
         }
-        
+
         .card-text {
           font-size: 0.9rem;
           color: #333;
           font-weight: 500;
           white-space: nowrap;
-          
+
           @media (max-width: 768px) {
             font-size: 0.8rem;
           }
@@ -285,19 +289,44 @@
 
 // Animations
 @keyframes wave {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(20deg); }
-  75% { transform: rotate(-15deg); }
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(20deg);
+  }
+
+  75% {
+    transform: rotate(-15deg);
+  }
 }
 
 @keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
+
+  0%,
+  50% {
+    opacity: 1;
+  }
+
+  51%,
+  100% {
+    opacity: 0;
+  }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 // Thème clair
@@ -305,24 +334,24 @@
   .hero-container {
     background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
   }
-  
+
   .hero-text-section {
     .name .first-name {
       color: #1e293b;
     }
-    
+
     .name .last-name {
       color: #475569;
     }
-    
+
     .description {
       color: #64748b;
     }
   }
-  
+
   .floating-card {
     background: rgba(30, 41, 59, 0.95);
-    
+
     .card-text {
       color: #f1f5f9;
     }
