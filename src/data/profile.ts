@@ -55,7 +55,7 @@ export const profile = {
 	location: "Antananarivo, Madagascar",
 	email: "fabricerandrianaivo8@gmail.com",
 	emailPro: "informaticienexternam@gmail.com",
-	phone: "+261 32 84 543 55",
+	phone: "+261 34 78 65 670",
 	available: true,
 	availabilityText: "Available for freelance & full-time opportunities",
 	resumeUrl: "/FabriceRandrianaivo_JS_2025_CV.pdf",
@@ -65,7 +65,7 @@ export const socials: SocialLink[] = [
 	{ name: "GitHub", url: "https://github.com/FabriceRandrianaivo", handle: "@FabriceRandrianaivo" },
 	{ name: "LinkedIn", url: "https://www.linkedin.com/in/fabrice-randrianaivo", handle: "fabrice-randrianaivo" },
 	{ name: "Email", url: "mailto:fabricerandrianaivo8@gmail.com", handle: "fabricerandrianaivo8@gmail.com" },
-	{ name: "WhatsApp", url: "https://wa.me/261328454355", handle: "+261 32 84 543 55" },
+	{ name: "WhatsApp", url: "https://wa.me/261347865670", handle: "+261 34 78 65 670" },
 ];
 
 export const achievements: AchievementItem[] = [

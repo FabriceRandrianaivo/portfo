@@ -81,7 +81,7 @@ const Contact: React.FC = () => {
 			icon: <Phone className="h-5 w-5" />,
 			label: t("contact.channel.phone"),
 			value: profile.phone,
-			href: "https://wa.me/261328454355",
+			href: "https://wa.me/261347865670",
 		},
 		{ icon: <MapPin className="h-5 w-5" />, label: t("contact.channel.location"), value: profile.location },
 	];
