@@ -39,6 +39,137 @@ export type ProjectReadonly = Readonly<Project>;
 export const projects: ReadonlyArray<ProjectReadonly> = [
 	{
 		year: 2026,
+		name: "ORIENT'IA",
+		company: "ISPM — Examen de fin d'études M2",
+		category: "IA / RAG",
+		featured: true,
+		description: {
+			fr: "Assistant intelligent d'orientation pédagogique : à partir du profil de l'utilisateur, il recommande une filière parmi les 16 de l'ISPM via un modèle de Machine Learning, une recherche documentaire hybride (RAG) et un graphe de connaissances. Chaque recommandation cite ses sources et déclare son incertitude.",
+			en: "Intelligent academic guidance assistant: from the user's profile, it recommends one of ISPM's 16 programs using a Machine Learning model, hybrid document retrieval (RAG) and a knowledge graph. Every recommendation cites its sources and states its uncertainty.",
+		},
+		technologies: ["Python", "Machine Learning", "RAG", "Knowledge Graph", "NLP", "Jupyter Notebook"],
+		link: ["orient-ia-igglia5.onrender.com", "github.com/FabriceRandrianaivo/ORIENT-IA-IGGLIA5"],
+		img: "",
+		post: {
+			fr: [
+				"Conception et entraînement du modèle de Machine Learning d'orientation",
+				"Recherche documentaire hybride (RAG) sur les sources officielles de l'ISPM",
+				"Construction d'un graphe de connaissances avec traçabilité des sources et de l'incertitude",
+				"Interface de recommandation argumentée (distingue modèle, documents et règles)",
+			],
+			en: [
+				"Designed and trained the guidance Machine Learning model",
+				"Hybrid document retrieval (RAG) over ISPM's official sources",
+				"Built a knowledge graph with source and uncertainty traceability",
+				"Reasoned recommendation UI (separates model, documents and rules)",
+			],
+		},
+	},
+	{
+		year: 2026,
+		name: "mAIntenance & Assistance",
+		company: "ISPM — Hackathon AI Engineering & ML",
+		category: "IA / LLM",
+		description: {
+			fr: "Assistant intelligent de support informatique : un ticket décrit en langage naturel entre, une décision structurée, justifiée et contrôlable en sort. Réalisé lors d'un hackathon AI Engineering & Machine Learning.",
+			en: "Intelligent IT support assistant: a ticket described in natural language comes in, a structured, justified and controllable decision comes out. Built during an AI Engineering & Machine Learning hackathon.",
+		},
+		technologies: ["Python", "LLM", "NLP", "Streamlit", "PowerShell"],
+		link: [
+			"maintenance-assistance-informatique-intelligent.streamlit.app",
+			"github.com/FabriceRandrianaivo/Maintenance-Assistance-Informatique-Intelligent",
+		],
+		img: "",
+		post: {
+			fr: [
+				"Traitement en langage naturel des tickets de support entrants",
+				"Génération d'une décision structurée, justifiée et contrôlable",
+				"Déploiement d'une démo en ligne (Streamlit) avec scénarios pré-remplis",
+			],
+			en: [
+				"Natural-language processing of incoming support tickets",
+				"Generation of a structured, justified and controllable decision",
+				"Deployed an online demo (Streamlit) with pre-filled scenarios",
+			],
+		},
+	},
+	{
+		year: 2026,
+		name: "DAL Conseil Ethik",
+		company: "Projet client — Site vitrine",
+		category: "Web / Site vitrine",
+		description: {
+			fr: "Site vitrine professionnel reconstruit en Next.js 14 (App Router) + Tailwind CSS, migré depuis un constructeur Hostinger vers un déploiement Vercel gratuit et performant.",
+			en: "Professional showcase website rebuilt in Next.js 14 (App Router) + Tailwind CSS, migrated from a Hostinger website builder to a fast, free Vercel deployment.",
+		},
+		technologies: ["Next.js 14", "TypeScript", "Tailwind CSS", "Vercel"],
+		link: [],
+		img: "",
+		post: {
+			fr: [
+				"Reconstruction complète du site en Next.js 14 + TypeScript + Tailwind",
+				"Migration depuis Hostinger Website Builder vers Vercel",
+				"Optimisation des performances et du responsive",
+			],
+			en: [
+				"Full rebuild of the site in Next.js 14 + TypeScript + Tailwind",
+				"Migration from Hostinger Website Builder to Vercel",
+				"Performance and responsive optimization",
+			],
+		},
+	},
+	{
+		year: 2026,
+		name: "Melodex",
+		company: "Projet personnel",
+		category: "Mobile / IA",
+		description: {
+			fr: "Application Flutter de numérisation de partitions manuscrites en notation Tonic Sol-fa, destinée aux chœurs malgaches : photographier une partition, corriger la lecture automatique, puis disposer d'une bibliothèque transposable et jouable — entièrement hors connexion.",
+			en: "Flutter app that digitizes handwritten Tonic Sol-fa scores for Malagasy choirs: photograph a score, fix the automatic reading, then browse a transposable, playable library — fully offline.",
+		},
+		technologies: ["Flutter", "Dart", "OCR", "Offline-first"],
+		link: ["melodex-mg.web.app"],
+		img: "",
+		post: {
+			fr: [
+				"Développement de l'app Flutter (scan et lecture automatique de partitions)",
+				"Bibliothèque locale hors-ligne, transposition et lecture audio",
+				"Optimisation pour un usage en répétition / église sans réseau",
+			],
+			en: [
+				"Built the Flutter app (score scanning and automatic reading)",
+				"Offline local library, transposition and audio playback",
+				"Optimized for rehearsal / church use without network",
+			],
+		},
+	},
+	{
+		year: 2026,
+		name: "V-SAM",
+		company: "Projet personnel",
+		category: "Mobile / AR",
+		description: {
+			fr: "Application mobile de maintenance industrielle augmentée : le smartphone scanne l'environnement (SLAM via ARCore/ARKit), reconnaît les machines par IA embarquée, puis superpose en réalité augmentée des données IoT temps réel, des manuels 3D et des instructions de réparation guidées.",
+			en: "Augmented industrial maintenance mobile app: the phone scans the environment (SLAM via ARCore/ARKit), recognizes machines with on-device AI, then overlays real-time IoT data, 3D manuals and guided repair instructions in augmented reality.",
+		},
+		technologies: ["Flutter", "Dart", "ARCore", "ARKit", "SLAM", "IoT", "3D"],
+		link: [],
+		img: "",
+		post: {
+			fr: [
+				"Conception de l'architecture AR (SLAM ARCore/ARKit) et de la reconnaissance IA embarquée",
+				"Superposition de données IoT temps réel et de manuels 3D",
+				"Parcours d'instructions de réparation guidées pour techniciens industriels",
+			],
+			en: [
+				"Designed the AR architecture (SLAM ARCore/ARKit) and on-device AI recognition",
+				"Overlay of real-time IoT data and 3D manuals",
+				"Guided repair instruction flow for industrial technicians",
+			],
+		},
+	},
+	{
+		year: 2026,
 		name: "My Vanilla Store Mada",
 		company: "Projet Client Freelance",
 		category: "E-commerce",
