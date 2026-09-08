@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { projects } from "../data/projects";
+import { useAllProjects } from "@/lib/portfolioData";
 import { useLang } from "@/lib/LanguageContext";
 import {
 	Dialog,
@@ -33,12 +33,13 @@ const ProjectsV2: React.FC = () => {
 	const [showFeaturedOnly, setShowFeaturedOnly] = useState<boolean>(false);
 	const [sortMode, setSortMode] = useState<SortMode>("recent");
 	const { t, lang } = useLang();
+	const { projects } = useAllProjects();
 
 	const categories = useMemo(() => {
 		const set = new Set<string>(["All"]);
 		projects.forEach((p) => p.category && set.add(p.category));
 		return Array.from(set);
-	}, []);
+	}, [projects]);
 
 	const filtered = useMemo(() => {
 		const q = search.trim().toLowerCase();
@@ -56,7 +57,7 @@ const ProjectsV2: React.FC = () => {
 		else if (sortMode === "oldest") sorted.sort((a, b) => a.year - b.year);
 		else sorted.sort((a, b) => a.name.localeCompare(b.name));
 		return sorted;
-	}, [search, activeCategory, showFeaturedOnly, sortMode]);
+	}, [projects, search, activeCategory, showFeaturedOnly, sortMode, lang]);
 
 	return (
 		<div className="relative min-h-screen bg-cream pb-24 pt-28 text-charcoal">
