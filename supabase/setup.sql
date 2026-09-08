@@ -24,9 +24,12 @@ create table if not exists public.projects (
   post_en        text[] not null default '{}',
   cover_url      text,
   sort           int not null default 0,
+  hidden         boolean not null default false,
   created_at     timestamptz not null default now(),
   updated_at     timestamptz not null default now()
 );
+-- pour les installs déjà créées avant l'ajout de la colonne :
+alter table public.projects add column if not exists hidden boolean not null default false;
 
 -- Images de galerie, rattachées à un projet par son slug.
 -- Fonctionne pour les projets statiques ET les nouveaux.

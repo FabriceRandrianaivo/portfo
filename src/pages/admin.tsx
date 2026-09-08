@@ -11,13 +11,21 @@ import {
 	ShieldCheck,
 	Copy,
 	Check,
+	Pencil,
+	EyeOff,
+	RotateCcw,
+	X,
 } from "lucide-react";
 import { isSupabaseConfigured } from "../lib/supabase";
 import { useAuth, signIn, signOut } from "../lib/useAuth";
 import {
 	createProject,
-	listDbProjectsRaw,
-	deleteProject,
+	saveProject,
+	listAdminProjects,
+	deleteProjectRow,
+	hideProject,
+	restoreProject,
+	getProjectForEdit,
 	listAllProjectsForAdmin,
 	listProjectImages,
 	uploadProjectImage,
@@ -26,7 +34,7 @@ import {
 	uploadDocument,
 	deleteDocument,
 	signDocumentUrl,
-	type DbProjectRow,
+	type AdminProjectItem,
 	type ProjectWithSlug,
 	type ProjectImageRow,
 	type DocumentRow,
@@ -52,6 +60,19 @@ const lines = (s: string) =>
 		.split("\n")
 		.map((x) => x.trim())
 		.filter(Boolean);
+
+const Badge: React.FC<{ children: React.ReactNode; tone?: "lime" | "muted" | "red" }> = ({
+	children,
+	tone = "muted",
+}) => {
+	const cls =
+		tone === "lime"
+			? "bg-lime/15 text-lime"
+			: tone === "red"
+				? "bg-red-100 text-red-600"
+				: "bg-charcoal/[0.06] text-charcoal/55";
+	return <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${cls}`}>{children}</span>;
+};
 
 // =====================================================================
 //  Racine
@@ -229,36 +250,45 @@ const emptyForm = {
 
 const ProjectsPanel: React.FC = () => {
 	const [form, setForm] = useState({ ...emptyForm });
-	const [rows, setRows] = useState<DbProjectRow[]>([]);
+	const [items, setItems] = useState<AdminProjectItem[]>([]);
 	const [busy, setBusy] = useState(false);
 	const [msg, setMsg] = useState<string | null>(null);
+	const [editing, setEditing] = useState<{ dbId?: string; slug: string } | null>(null);
 
-	const refresh = () => listDbProjectsRaw().then(setRows).catch(() => setRows([]));
+	const refresh = () => listAdminProjects().then(setItems).catch(() => setItems([]));
 	useEffect(() => {
 		refresh();
 	}, []);
+
+	const buildInput = () => ({
+		name: form.name,
+		company: form.company,
+		year: Number(form.year),
+		category: form.category || undefined,
+		featured: form.featured,
+		descriptionFr: form.descriptionFr,
+		descriptionEn: form.descriptionEn,
+		technologies: csv(form.technologies),
+		links: csv(form.links),
+		postFr: lines(form.postFr),
+		postEn: lines(form.postEn),
+		coverUrl: form.coverUrl || undefined,
+	});
 
 	const submit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setBusy(true);
 		setMsg(null);
 		try {
-			await createProject({
-				name: form.name,
-				company: form.company,
-				year: Number(form.year),
-				category: form.category || undefined,
-				featured: form.featured,
-				descriptionFr: form.descriptionFr,
-				descriptionEn: form.descriptionEn,
-				technologies: csv(form.technologies),
-				links: csv(form.links),
-				postFr: lines(form.postFr),
-				postEn: lines(form.postEn),
-				coverUrl: form.coverUrl || undefined,
-			});
+			if (editing) {
+				await saveProject(buildInput(), { id: editing.dbId, slug: editing.slug });
+				setMsg("Projet modifié ✅");
+			} else {
+				await createProject(buildInput());
+				setMsg("Projet ajouté ✅");
+			}
 			setForm({ ...emptyForm });
-			setMsg("Projet ajouté ✅");
+			setEditing(null);
 			refresh();
 		} catch (err) {
 			setMsg(err instanceof Error ? err.message : "Erreur");
@@ -267,9 +297,49 @@ const ProjectsPanel: React.FC = () => {
 		}
 	};
 
-	const remove = async (id: string) => {
-		if (!confirm("Supprimer ce projet ?")) return;
-		await deleteProject(id);
+	const startEdit = async (item: AdminProjectItem) => {
+		setMsg(null);
+		try {
+			const p = await getProjectForEdit(item.slug);
+			setForm({
+				name: p.name,
+				company: p.company,
+				year: p.year,
+				category: p.category ?? "",
+				featured: p.featured ?? false,
+				descriptionFr: p.descriptionFr ?? "",
+				descriptionEn: p.descriptionEn ?? "",
+				technologies: p.technologies.join(", "),
+				links: p.links.join(", "),
+				postFr: p.postFr.join("\n"),
+				postEn: p.postEn.join("\n"),
+				coverUrl: p.coverUrl ?? "",
+			});
+			setEditing({ dbId: item.dbId, slug: item.slug });
+			window.scrollTo({ top: 0, behavior: "smooth" });
+		} catch (err) {
+			setMsg(err instanceof Error ? err.message : "Erreur");
+		}
+	};
+
+	const cancelEdit = () => {
+		setEditing(null);
+		setForm({ ...emptyForm });
+	};
+
+	const del = async (item: AdminProjectItem) => {
+		const hard = item.source === "db";
+		const label = hard
+			? "Supprimer définitivement ce projet ?"
+			: "Masquer ce projet du site public ? (restaurable)";
+		if (!confirm(label)) return;
+		if (hard && item.dbId) await deleteProjectRow(item.dbId);
+		else await hideProject(item.slug);
+		refresh();
+	};
+
+	const restore = async (item: AdminProjectItem) => {
+		await restoreProject(item.slug);
 		refresh();
 	};
 
@@ -278,7 +348,14 @@ const ProjectsPanel: React.FC = () => {
 	return (
 		<div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
 			<form onSubmit={submit} className={card}>
-				<h2 className="mb-4 text-base font-bold">Ajouter un projet</h2>
+				<div className="mb-4 flex items-center justify-between">
+					<h2 className="text-base font-bold">{editing ? "Modifier le projet" : "Ajouter un projet"}</h2>
+					{editing && (
+						<button type="button" onClick={cancelEdit} className={btnGhost}>
+							<X className="h-3.5 w-3.5" /> Annuler
+						</button>
+					)}
+				</div>
 				<div className="grid grid-cols-2 gap-3">
 					<div className="col-span-2">
 						<label className={label}>Nom *</label>
@@ -380,35 +457,72 @@ const ProjectsPanel: React.FC = () => {
 				</div>
 				{msg && <p className="mt-3 text-sm text-charcoal/70">{msg}</p>}
 				<button type="submit" disabled={busy} className={`${btn} mt-4`}>
-					{busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <FolderPlus className="h-4 w-4" />}
-					Ajouter le projet
+					{busy ? (
+						<Loader2 className="h-4 w-4 animate-spin" />
+					) : editing ? (
+						<Pencil className="h-4 w-4" />
+					) : (
+						<FolderPlus className="h-4 w-4" />
+					)}
+					{editing ? "Enregistrer les modifications" : "Ajouter le projet"}
 				</button>
 			</form>
 
 			<div className={card}>
-				<h2 className="mb-4 text-base font-bold">Projets ajoutés ({rows.length})</h2>
-				{rows.length === 0 ? (
-					<p className="text-sm text-charcoal/50">Aucun projet ajouté via le back office pour l'instant.</p>
-				) : (
-					<ul className="space-y-2">
-						{rows.map((r) => (
-							<li
-								key={r.id}
-								className="flex items-center justify-between rounded-lg border border-charcoal/10 px-3 py-2"
-							>
-								<div className="min-w-0">
-									<p className="truncate text-sm font-semibold">{r.name}</p>
-									<p className="truncate text-xs text-charcoal/50">
-										{r.company} · {r.year}
-									</p>
+				<h2 className="mb-1 text-base font-bold">Tous les projets ({items.length})</h2>
+				<p className="mb-4 text-xs text-charcoal/50">
+					« Existant » = projet d'origine (modifiable / masquable). « Ajouté » = créé ici.
+				</p>
+				<ul className="max-h-[60vh] space-y-2 overflow-y-auto pr-1">
+					{items.map((it) => (
+						<li
+							key={it.slug}
+							className={`flex items-center justify-between gap-2 rounded-lg border border-charcoal/10 px-3 py-2 ${
+								it.hidden ? "bg-charcoal/[0.03] opacity-70" : ""
+							}`}
+						>
+							<div className="min-w-0">
+								<p className="truncate text-sm font-semibold">{it.name}</p>
+								<p className="truncate text-xs text-charcoal/50">
+									{it.company} · {it.year}
+								</p>
+								<div className="mt-1 flex flex-wrap gap-1">
+									<Badge tone={it.source === "db" ? "lime" : "muted"}>
+										{it.source === "db" ? "Ajouté" : "Existant"}
+									</Badge>
+									{it.overridden && it.source === "static" && !it.hidden && <Badge>Modifié</Badge>}
+									{it.hidden && <Badge tone="red">Masqué</Badge>}
 								</div>
-								<button onClick={() => remove(r.id)} className="text-charcoal/40 hover:text-red-600">
-									<Trash2 className="h-4 w-4" />
+							</div>
+							<div className="flex shrink-0 items-center gap-1.5">
+								<button
+									onClick={() => startEdit(it)}
+									title="Modifier"
+									className="rounded p-1.5 text-charcoal/50 transition hover:bg-charcoal/5 hover:text-lime"
+								>
+									<Pencil className="h-4 w-4" />
 								</button>
-							</li>
-						))}
-					</ul>
-				)}
+								{it.hidden ? (
+									<button
+										onClick={() => restore(it)}
+										title="Restaurer"
+										className="rounded p-1.5 text-charcoal/50 transition hover:bg-charcoal/5 hover:text-lime"
+									>
+										<RotateCcw className="h-4 w-4" />
+									</button>
+								) : (
+									<button
+										onClick={() => del(it)}
+										title={it.source === "db" ? "Supprimer" : "Masquer"}
+										className="rounded p-1.5 text-charcoal/40 transition hover:bg-charcoal/5 hover:text-red-600"
+									>
+										{it.source === "db" ? <Trash2 className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+									</button>
+								)}
+							</div>
+						</li>
+					))}
+				</ul>
 			</div>
 		</div>
 	);
