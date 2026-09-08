@@ -15,6 +15,8 @@ import {
 	EyeOff,
 	RotateCcw,
 	X,
+	Inbox,
+	Mail,
 } from "lucide-react";
 import { isSupabaseConfigured } from "../lib/supabase";
 import { useAuth, signIn, signOut } from "../lib/useAuth";
@@ -34,10 +36,13 @@ import {
 	uploadDocument,
 	deleteDocument,
 	signDocumentUrl,
+	listMessages,
+	deleteMessage,
 	type AdminProjectItem,
 	type ProjectWithSlug,
 	type ProjectImageRow,
 	type DocumentRow,
+	type MessageRow,
 } from "../lib/portfolioData";
 
 // ------- helpers UI -------
@@ -256,7 +261,7 @@ const LoginForm: React.FC = () => {
 // =====================================================================
 //  Dashboard
 // =====================================================================
-type Tab = "projects" | "photos" | "documents";
+type Tab = "projects" | "photos" | "documents" | "messages";
 
 const Dashboard: React.FC<{ email: string }> = ({ email }) => {
 	const [tab, setTab] = useState<Tab>("projects");
@@ -265,6 +270,7 @@ const Dashboard: React.FC<{ email: string }> = ({ email }) => {
 		{ id: "projects", label: "Projets", icon: <FolderPlus className="h-4 w-4" /> },
 		{ id: "photos", label: "Photos", icon: <Images className="h-4 w-4" /> },
 		{ id: "documents", label: "Documents privés", icon: <FileLock2 className="h-4 w-4" /> },
+		{ id: "messages", label: "Messages", icon: <Inbox className="h-4 w-4" /> },
 	];
 
 	return (
@@ -304,6 +310,7 @@ const Dashboard: React.FC<{ email: string }> = ({ email }) => {
 				{tab === "projects" && <ProjectsPanel />}
 				{tab === "photos" && <PhotosPanel />}
 				{tab === "documents" && <DocumentsPanel />}
+				{tab === "messages" && <MessagesPanel />}
 			</main>
 		</div>
 	);
@@ -877,6 +884,101 @@ const DocumentsPanel: React.FC = () => {
 					recruteur.
 				</p>
 			</div>
+		</div>
+	);
+};
+
+// ---------------------------------------------------------------------
+//  Onglet Messages
+// ---------------------------------------------------------------------
+const MessagesPanel: React.FC = () => {
+	const [rows, setRows] = useState<MessageRow[]>([]);
+	const [loading, setLoading] = useState(true);
+	const { confirm, dialog } = useConfirm();
+
+	const refresh = () => {
+		setLoading(true);
+		listMessages()
+			.then(setRows)
+			.catch(() => setRows([]))
+			.finally(() => setLoading(false));
+	};
+	useEffect(() => {
+		refresh();
+	}, []);
+
+	const del = async (m: MessageRow) => {
+		const ok = await confirm({
+			title: "Supprimer ce message ?",
+			message: `Message de ${m.name} — cette action est définitive.`,
+			confirmLabel: "Supprimer",
+			danger: true,
+		});
+		if (!ok) return;
+		await deleteMessage(m.id);
+		refresh();
+	};
+
+	const fmt = (iso: string) => {
+		try {
+			return new Date(iso).toLocaleString("fr-FR");
+		} catch {
+			return iso;
+		}
+	};
+
+	return (
+		<div className={card}>
+			{dialog}
+			<div className="mb-4 flex items-center justify-between">
+				<h2 className="text-base font-bold">Messages reçus ({rows.length})</h2>
+				<button onClick={refresh} className={btnGhost}>
+					<RotateCcw className="h-3.5 w-3.5" /> Rafraîchir
+				</button>
+			</div>
+			{loading ? (
+				<div className="py-10 text-center">
+					<Loader2 className="mx-auto h-5 w-5 animate-spin text-lime" />
+				</div>
+			) : rows.length === 0 ? (
+				<div className="rounded-xl border border-dashed border-charcoal/20 p-10 text-center text-sm text-charcoal/50">
+					<Inbox className="mx-auto mb-2 h-6 w-6 text-charcoal/30" />
+					Aucun message pour l'instant.
+				</div>
+			) : (
+				<ul className="space-y-3">
+					{rows.map((m) => (
+						<li key={m.id} className="rounded-xl border border-charcoal/10 p-4">
+							<div className="flex items-start justify-between gap-3">
+								<div className="min-w-0">
+									<p className="truncate text-sm font-semibold">
+										{m.name} <span className="font-normal text-charcoal/45">· {m.email}</span>
+									</p>
+									{m.subject && <p className="truncate text-xs font-medium text-lime">{m.subject}</p>}
+									<p className="text-[11px] text-charcoal/40">{fmt(m.created_at)}</p>
+								</div>
+								<div className="flex shrink-0 items-center gap-1.5">
+									<a
+										href={`mailto:${m.email}?subject=${encodeURIComponent("Re: " + (m.subject || "votre message"))}`}
+										title="Répondre par email"
+										className="rounded p-1.5 text-charcoal/50 transition hover:bg-charcoal/5 hover:text-lime"
+									>
+										<Mail className="h-4 w-4" />
+									</a>
+									<button
+										onClick={() => del(m)}
+										title="Supprimer"
+										className="rounded p-1.5 text-charcoal/40 transition hover:bg-charcoal/5 hover:text-red-600"
+									>
+										<Trash2 className="h-4 w-4" />
+									</button>
+								</div>
+							</div>
+							<p className="mt-2 whitespace-pre-wrap break-words text-sm text-charcoal/70">{m.message}</p>
+						</li>
+					))}
+				</ul>
+			)}
 		</div>
 	);
 };

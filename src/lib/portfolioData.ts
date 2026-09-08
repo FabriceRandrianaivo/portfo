@@ -450,6 +450,75 @@ export async function deleteDocument(row: DocumentRow): Promise<void> {
 	if (error) throw error;
 }
 
+// ---------- messages de contact ----------
+
+export interface MessageRow {
+	id: string;
+	name: string;
+	email: string;
+	subject: string | null;
+	message: string;
+	created_at: string;
+}
+
+export interface ContactInput {
+	name: string;
+	email: string;
+	subject?: string;
+	message: string;
+}
+
+/**
+ * Enregistre un message de contact dans Supabase, et — si une clé Web3Forms
+ * est configurée — envoie aussi une notification email. Retourne le canal utilisé.
+ */
+export async function sendContactMessage(input: ContactInput): Promise<"db" | "web3" | "none"> {
+	let stored = false;
+	if (supabase) {
+		const { error } = await supabase.from("messages").insert({
+			name: input.name,
+			email: input.email,
+			subject: input.subject ?? null,
+			message: input.message,
+		});
+		if (!error) stored = true;
+	}
+
+	const key = import.meta.env.VITE_WEB3FORMS_KEY as string | undefined;
+	if (key) {
+		try {
+			await fetch("https://api.web3forms.com/submit", {
+				method: "POST",
+				headers: { "Content-Type": "application/json", Accept: "application/json" },
+				body: JSON.stringify({
+					access_key: key,
+					name: input.name,
+					email: input.email,
+					subject: input.subject || "Nouveau message — portfolio",
+					message: input.message,
+				}),
+			});
+			return stored ? "db" : "web3";
+		} catch {
+			/* on garde le résultat Supabase */
+		}
+	}
+	return stored ? "db" : "none";
+}
+
+export async function listMessages(): Promise<MessageRow[]> {
+	if (!supabase) return [];
+	const { data, error } = await supabase.from("messages").select("*").order("created_at", { ascending: false });
+	if (error) throw error;
+	return data as MessageRow[];
+}
+
+export async function deleteMessage(id: string): Promise<void> {
+	if (!supabase) throw new Error("Supabase non configuré");
+	const { error } = await supabase.from("messages").delete().eq("id", id);
+	if (error) throw error;
+}
+
 /** Génère un lien signé temporaire (par défaut 7 jours) pour partager un document privé. */
 export async function signDocumentUrl(path: string, expiresInSeconds = 60 * 60 * 24 * 7): Promise<string> {
 	if (!supabase) throw new Error("Supabase non configuré");
