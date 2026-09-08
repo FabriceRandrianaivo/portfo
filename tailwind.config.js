@@ -83,6 +83,10 @@ export default {
           "0%, 100%": { backgroundPosition: "0% 50%" },
           "50%": { backgroundPosition: "100% 50%" },
         },
+        "fade-in": {
+          from: { opacity: "0", transform: "translateY(6px) scale(0.98)" },
+          to: { opacity: "1", transform: "translateY(0) scale(1)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -92,6 +96,7 @@ export default {
         glow: "glow 2s ease-in-out infinite",
         marquee: "marquee 40s linear infinite",
         "gradient-x": "gradient-x 6s ease infinite",
+        "fade-in": "fade-in 0.15s ease-out",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

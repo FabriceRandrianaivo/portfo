@@ -10,6 +10,7 @@ import Skills from "./pages/skills";
 import Experience from "./pages/experience";
 import ProjectsV2 from "./pages/projects-v2";
 import Contact from "./pages/contact";
+import Admin from "./pages/admin";
 import NotFund from "./pages/notFund";
 import { LanguageProvider } from "./lib/LanguageContext";
 import { LenisProvider } from "./components/lenis-provider";
@@ -75,9 +76,28 @@ const AnimatedRoutes: React.FC = () => {
             </motion.div>
           }
         />
+        <Route path="/admin" element={<Admin />} />
         <Route path="*" element={<NotFund />} />
       </Routes>
     </AnimatePresence>
+  );
+};
+
+const Shell: React.FC<{ theme: boolean; setTheme: React.Dispatch<React.SetStateAction<boolean>> }> = ({
+  theme,
+  setTheme,
+}) => {
+  const location = useLocation();
+  const isAdmin = location.pathname.startsWith("/admin");
+  if (isAdmin) return <AnimatedRoutes />;
+  return (
+    <>
+      <TopHeader theme={theme} setTheme={setTheme} />
+      <main className="min-h-screen bg-cream text-charcoal">
+        <AnimatedRoutes />
+      </main>
+      <Footer />
+    </>
   );
 };
 
@@ -100,11 +120,7 @@ const App: React.FC = () => {
       <LenisProvider>
         <ClickSpark sparkColor="#6E93AE" sparkSize={12} sparkRadius={18} sparkCount={8} duration={400} easing="ease-out">
           <Router>
-            <TopHeader theme={isDarkTheme} setTheme={setIsDarkTheme} />
-            <main className="min-h-screen bg-cream text-charcoal">
-              <AnimatedRoutes />
-            </main>
-            <Footer />
+            <Shell theme={isDarkTheme} setTheme={setIsDarkTheme} />
           </Router>
         </ClickSpark>
       </LenisProvider>
