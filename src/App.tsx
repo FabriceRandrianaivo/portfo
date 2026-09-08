@@ -15,6 +15,7 @@ import NotFund from "./pages/notFund";
 import { LanguageProvider } from "./lib/LanguageContext";
 import { LenisProvider } from "./components/lenis-provider";
 import ClickSpark from "./components/ui/clickSpark";
+import { initAnalytics, trackPageview } from "./lib/analytics";
 
 const pageTransition = {
   initial: { opacity: 0, y: 12 },
@@ -89,6 +90,17 @@ const Shell: React.FC<{ theme: boolean; setTheme: React.Dispatch<React.SetStateA
 }) => {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith("/admin");
+
+  useEffect(() => {
+    initAnalytics();
+  }, []);
+  useEffect(() => {
+    // on ne suit pas les pages d'administration
+    if (!location.pathname.startsWith("/admin")) {
+      trackPageview(location.pathname + location.search);
+    }
+  }, [location.pathname, location.search]);
+
   if (isAdmin) return <AnimatedRoutes />;
   return (
     <>
