@@ -50,6 +50,7 @@ const Hero: React.FC = () => {
 		"NestJS",
 		"FastAPI",
 		"Python",
+		"Java",
 		"Flutter",
 		"LLM / RAG",
 		"OpenAI · Claude",
