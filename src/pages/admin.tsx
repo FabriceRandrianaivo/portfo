@@ -74,6 +74,85 @@ const Badge: React.FC<{ children: React.ReactNode; tone?: "lime" | "muted" | "re
 	return <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${cls}`}>{children}</span>;
 };
 
+// ------- pop-up de confirmation réutilisable -------
+interface ConfirmOpts {
+	title: string;
+	message: string;
+	confirmLabel?: string;
+	cancelLabel?: string;
+	danger?: boolean;
+}
+interface ConfirmState extends ConfirmOpts {
+	open: boolean;
+	resolve?: (v: boolean) => void;
+}
+
+function useConfirm() {
+	const [state, setState] = useState<ConfirmState>({ open: false, title: "", message: "" });
+
+	const confirm = (opts: ConfirmOpts) =>
+		new Promise<boolean>((resolve) => setState({ open: true, resolve, ...opts }));
+
+	const handle = (v: boolean) => {
+		state.resolve?.(v);
+		setState((s) => ({ ...s, open: false, resolve: undefined }));
+	};
+
+	useEffect(() => {
+		if (!state.open) return;
+		const onKey = (e: KeyboardEvent) => {
+			if (e.key === "Escape") handle(false);
+			if (e.key === "Enter") handle(true);
+		};
+		window.addEventListener("keydown", onKey);
+		return () => window.removeEventListener("keydown", onKey);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [state.open]);
+
+	const dialog = state.open ? (
+		<div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+			<div
+				className="absolute inset-0 bg-charcoal/40 backdrop-blur-sm"
+				onClick={() => handle(false)}
+				aria-hidden
+			/>
+			<div
+				role="alertdialog"
+				className="relative z-10 w-full max-w-sm animate-fade-in rounded-2xl border border-charcoal/10 bg-white p-6 shadow-2xl"
+			>
+				<div className="flex items-start gap-3">
+					<div
+						className={`grid h-10 w-10 shrink-0 place-items-center rounded-full ${
+							state.danger ? "bg-red-100 text-red-600" : "bg-lime/15 text-lime"
+						}`}
+					>
+						{state.danger ? <Trash2 className="h-5 w-5" /> : <ShieldCheck className="h-5 w-5" />}
+					</div>
+					<div className="min-w-0">
+						<h3 className="text-base font-bold text-charcoal">{state.title}</h3>
+						<p className="mt-1 text-sm text-charcoal/60">{state.message}</p>
+					</div>
+				</div>
+				<div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+					<button onClick={() => handle(false)} className={`${btnGhost} justify-center py-2`}>
+						{state.cancelLabel ?? "Annuler"}
+					</button>
+					<button
+						onClick={() => handle(true)}
+						className={`inline-flex items-center justify-center gap-2 rounded-full px-5 py-2 text-sm font-semibold text-white transition ${
+							state.danger ? "bg-red-600 hover:bg-red-700" : "bg-lime hover:brightness-110"
+						}`}
+					>
+						{state.confirmLabel ?? "Confirmer"}
+					</button>
+				</div>
+			</div>
+		</div>
+	) : null;
+
+	return { confirm, dialog };
+}
+
 // =====================================================================
 //  Racine
 // =====================================================================
@@ -190,25 +269,25 @@ const Dashboard: React.FC<{ email: string }> = ({ email }) => {
 
 	return (
 		<div className="min-h-screen bg-cream text-charcoal">
-			<header className="border-b border-charcoal/10 bg-white">
-				<div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-					<div>
+			<header className="sticky top-0 z-40 border-b border-charcoal/10 bg-white/95 backdrop-blur">
+				<div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3 sm:px-6 sm:py-4">
+					<div className="min-w-0">
 						<p className="font-mono text-[11px] uppercase tracking-widest text-lime">Back office</p>
-						<h1 className="text-lg font-bold">Portfolio — administration</h1>
+						<h1 className="truncate text-base font-bold sm:text-lg">Portfolio — administration</h1>
 					</div>
-					<div className="flex items-center gap-3">
-						<span className="hidden text-xs text-charcoal/50 sm:inline">{email}</span>
+					<div className="flex shrink-0 items-center gap-3">
+						<span className="hidden text-xs text-charcoal/50 md:inline">{email}</span>
 						<button onClick={() => void signOut()} className={btnGhost}>
-							<LogOut className="h-3.5 w-3.5" /> Déconnexion
+							<LogOut className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Déconnexion</span>
 						</button>
 					</div>
 				</div>
-				<div className="mx-auto flex max-w-5xl gap-1 px-6">
+				<div className="mx-auto flex max-w-5xl gap-1 overflow-x-auto px-4 sm:px-6">
 					{tabs.map((tb) => (
 						<button
 							key={tb.id}
 							onClick={() => setTab(tb.id)}
-							className={`-mb-px flex items-center gap-2 border-b-2 px-4 py-2.5 text-sm font-semibold transition ${
+							className={`-mb-px flex shrink-0 items-center gap-2 whitespace-nowrap border-b-2 px-3 py-2.5 text-sm font-semibold transition sm:px-4 ${
 								tab === tb.id
 									? "border-lime text-lime"
 									: "border-transparent text-charcoal/50 hover:text-charcoal"
@@ -221,7 +300,7 @@ const Dashboard: React.FC<{ email: string }> = ({ email }) => {
 				</div>
 			</header>
 
-			<main className="mx-auto max-w-5xl px-6 py-8">
+			<main className="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-8">
 				{tab === "projects" && <ProjectsPanel />}
 				{tab === "photos" && <PhotosPanel />}
 				{tab === "documents" && <DocumentsPanel />}
@@ -254,6 +333,7 @@ const ProjectsPanel: React.FC = () => {
 	const [busy, setBusy] = useState(false);
 	const [msg, setMsg] = useState<string | null>(null);
 	const [editing, setEditing] = useState<{ dbId?: string; slug: string } | null>(null);
+	const { confirm, dialog } = useConfirm();
 
 	const refresh = () => listAdminProjects().then(setItems).catch(() => setItems([]));
 	useEffect(() => {
@@ -329,10 +409,15 @@ const ProjectsPanel: React.FC = () => {
 
 	const del = async (item: AdminProjectItem) => {
 		const hard = item.source === "db";
-		const label = hard
-			? "Supprimer définitivement ce projet ?"
-			: "Masquer ce projet du site public ? (restaurable)";
-		if (!confirm(label)) return;
+		const ok = await confirm({
+			title: hard ? `Supprimer « ${item.name} » ?` : `Masquer « ${item.name} » ?`,
+			message: hard
+				? "Cette suppression est définitive et ne peut pas être annulée."
+				: "Le projet sera retiré du site public. Tu pourras le restaurer à tout moment.",
+			confirmLabel: hard ? "Supprimer" : "Masquer",
+			danger: true,
+		});
+		if (!ok) return;
 		if (hard && item.dbId) await deleteProjectRow(item.dbId);
 		else await hideProject(item.slug);
 		refresh();
@@ -347,6 +432,7 @@ const ProjectsPanel: React.FC = () => {
 
 	return (
 		<div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+			{dialog}
 			<form onSubmit={submit} className={card}>
 				<div className="mb-4 flex items-center justify-between">
 					<h2 className="text-base font-bold">{editing ? "Modifier le projet" : "Ajouter un projet"}</h2>
@@ -356,8 +442,8 @@ const ProjectsPanel: React.FC = () => {
 						</button>
 					)}
 				</div>
-				<div className="grid grid-cols-2 gap-3">
-					<div className="col-span-2">
+				<div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+					<div className="sm:col-span-2">
 						<label className={label}>Nom *</label>
 						<input required value={form.name} onChange={(e) => set("name", e.target.value)} className={input} />
 					</div>
@@ -537,6 +623,7 @@ const PhotosPanel: React.FC = () => {
 	const [images, setImages] = useState<ProjectImageRow[]>([]);
 	const [busy, setBusy] = useState(false);
 	const [msg, setMsg] = useState<string | null>(null);
+	const { confirm, dialog } = useConfirm();
 
 	useEffect(() => {
 		listAllProjectsForAdmin().then((p) => {
@@ -569,13 +656,20 @@ const PhotosPanel: React.FC = () => {
 	};
 
 	const remove = async (row: ProjectImageRow) => {
-		if (!confirm("Supprimer cette photo ?")) return;
+		const ok = await confirm({
+			title: "Supprimer cette photo ?",
+			message: "Elle sera retirée de la galerie du projet.",
+			confirmLabel: "Supprimer",
+			danger: true,
+		});
+		if (!ok) return;
 		await deleteProjectImage(row);
 		loadImages(slug);
 	};
 
 	return (
 		<div className={card}>
+			{dialog}
 			<h2 className="mb-4 text-base font-bold">Déposer des photos de projet</h2>
 			<div className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end">
 				<div>
@@ -643,6 +737,7 @@ const DocumentsPanel: React.FC = () => {
 	const [busy, setBusy] = useState(false);
 	const [msg, setMsg] = useState<string | null>(null);
 	const [copied, setCopied] = useState<string | null>(null);
+	const { confirm, dialog } = useConfirm();
 
 	const refresh = () => listDocuments().then(setRows).catch(() => setRows([]));
 	useEffect(() => {
@@ -682,13 +777,20 @@ const DocumentsPanel: React.FC = () => {
 	};
 
 	const remove = async (row: DocumentRow) => {
-		if (!confirm("Supprimer ce document ?")) return;
+		const ok = await confirm({
+			title: `Supprimer « ${row.title} » ?`,
+			message: "Le document et son fichier seront définitivement supprimés.",
+			confirmLabel: "Supprimer",
+			danger: true,
+		});
+		if (!ok) return;
 		await deleteDocument(row);
 		refresh();
 	};
 
 	return (
 		<div className="grid gap-6 lg:grid-cols-[1fr_1.2fr]">
+			{dialog}
 			<form onSubmit={submit} className={card}>
 				<h2 className="mb-1 text-base font-bold">Ajouter un document privé</h2>
 				<p className="mb-4 text-xs text-charcoal/50">
