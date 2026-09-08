@@ -42,7 +42,21 @@ const Hero: React.FC = () => {
 	const textX2 = useSpring(useTransform(scrollYProgress, [0, 1], [0, 70]), spring);
 	const opacity = useSpring(useTransform(scrollYProgress, [0, 0.8], [1, 0]), spring);
 
-	const skills = ["React", "Next.js", "FastAPI", "Flutter", "LLM / IA"];
+	const skills = [
+		"React",
+		"Next.js",
+		"TypeScript",
+		"Node.js",
+		"NestJS",
+		"FastAPI",
+		"Python",
+		"Flutter",
+		"LLM / RAG",
+		"OpenAI · Claude",
+		"YOLO v8",
+		"PostgreSQL",
+		"Docker",
+	];
 
 	return (
 		<section
