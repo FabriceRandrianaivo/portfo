@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import emailjs from "emailjs-com";
 import { Mail, MapPin, Phone, Send, CheckCircle2, Loader2 } from "lucide-react";
 import { FaGithub, FaLinkedin, FaWhatsapp } from "react-icons/fa";
 import { profile, socials } from "../data/profile";
 import { useLang } from "@/lib/LanguageContext";
+import { sendContactMessage } from "@/lib/portfolioData";
 
 interface ContactForm {
 	name: string;
@@ -37,27 +37,18 @@ const Contact: React.FC = () => {
 			return;
 		}
 
-		const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID as string | undefined;
-		const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID as string | undefined;
-		const USER_ID = import.meta.env.VITE_EMAILJS_USER_ID as string | undefined;
-
 		setStatus("sending");
 		setErrorMsg(null);
 
 		try {
-			if (SERVICE_ID && TEMPLATE_ID && USER_ID) {
-				await emailjs.send(
-					SERVICE_ID,
-					TEMPLATE_ID,
-					{
-						from_name: form.name,
-						from_email: form.email,
-						subject: form.subject || "Portfolio contact",
-						message: form.message,
-					},
-					USER_ID
-				);
-			} else {
+			const channel = await sendContactMessage({
+				name: form.name,
+				email: form.email,
+				subject: form.subject,
+				message: form.message,
+			});
+			// Aucun backend disponible → repli sur le client mail du visiteur
+			if (channel === "none") {
 				const subject = encodeURIComponent(form.subject || "Portfolio contact");
 				const body = encodeURIComponent(`From: ${form.name} <${form.email}>\n\n${form.message}`);
 				window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`;

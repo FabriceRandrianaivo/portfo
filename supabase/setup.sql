@@ -53,6 +53,16 @@ create table if not exists public.documents (
   created_at timestamptz not null default now()
 );
 
+-- Messages reçus via le formulaire de contact.
+create table if not exists public.messages (
+  id         uuid primary key default gen_random_uuid(),
+  name       text not null,
+  email      text not null,
+  subject    text,
+  message    text not null,
+  created_at timestamptz not null default now()
+);
+
 -- updated_at automatique sur projects
 create or replace function public.set_updated_at()
 returns trigger language plpgsql as $$
@@ -67,6 +77,15 @@ create trigger projects_set_updated_at
 alter table public.projects       enable row level security;
 alter table public.project_images enable row level security;
 alter table public.documents      enable row level security;
+alter table public.messages       enable row level security;
+
+-- messages : INSERT public (formulaire), lecture/suppression réservées à l'admin
+drop policy if exists "messages public insert" on public.messages;
+create policy "messages public insert" on public.messages for insert with check (true);
+drop policy if exists "messages auth read" on public.messages;
+create policy "messages auth read" on public.messages for select to authenticated using (true);
+drop policy if exists "messages auth delete" on public.messages;
+create policy "messages auth delete" on public.messages for delete to authenticated using (true);
 
 -- projects : lecture PUBLIQUE, écriture réservée aux connectés (toi)
 drop policy if exists "projects public read"  on public.projects;
