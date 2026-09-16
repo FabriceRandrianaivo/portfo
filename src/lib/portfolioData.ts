@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { supabase, isSupabaseConfigured, BUCKETS } from "./supabase";
 import { projects as staticProjects, type Project } from "../data/projects";
+import { experiences as staticExperiences, type ExperienceItem } from "../data/profile";
 import { slugify, safeFileName } from "./slug";
 
 /** Projet enrichi d'un slug (clé stable pour rattacher les images). */
@@ -525,4 +526,275 @@ export async function signDocumentUrl(path: string, expiresInSeconds = 60 * 60 *
 	const { data, error } = await supabase.storage.from(BUCKETS.documents).createSignedUrl(path, expiresInSeconds);
 	if (error) throw error;
 	return data.signedUrl;
+}
+
+// ============================================================
+//  Expériences / parcours
+// ============================================================
+
+export interface ExperienceWithSlug extends ExperienceItem {
+	slug: string;
+	fromDb?: boolean;
+	dbId?: string;
+	hidden?: boolean;
+}
+
+export interface ExperienceRow {
+	id: string;
+	slug: string;
+	period: string;
+	role_fr: string | null;
+	role_en: string | null;
+	company: string;
+	location: string | null;
+	type: "work" | "education" | "freelance";
+	highlights_fr: string[];
+	highlights_en: string[];
+	stack: string[];
+	sort: number;
+	hidden: boolean;
+}
+
+const EXP_COLS =
+	"id,slug,period,role_fr,role_en,company,location,type,highlights_fr,highlights_en,stack,sort,hidden";
+
+function expSlug(e: ExperienceItem): string {
+	return slugify(`${e.company}-${e.period}`);
+}
+function expWithSlug(e: ExperienceItem): ExperienceWithSlug {
+	return { ...e, slug: expSlug(e) };
+}
+const staticExpWithSlug = (): ExperienceWithSlug[] => staticExperiences.map(expWithSlug);
+
+function mapExpRow(r: ExperienceRow): ExperienceWithSlug {
+	return {
+		slug: r.slug,
+		fromDb: true,
+		dbId: r.id,
+		hidden: r.hidden,
+		period: r.period,
+		role: { fr: r.role_fr ?? "", en: r.role_en ?? "" },
+		company: r.company,
+		location: r.location ?? undefined,
+		type: r.type,
+		highlights: { fr: r.highlights_fr ?? [], en: r.highlights_en ?? [] },
+		stack: r.stack ?? [],
+	};
+}
+
+export async function fetchDbExperiences(): Promise<ExperienceWithSlug[]> {
+	if (!supabase) return [];
+	const { data, error } = await supabase.from("experiences").select(EXP_COLS).order("sort", { ascending: true });
+	if (error) throw error;
+	return (data as ExperienceRow[]).map(mapExpRow);
+}
+
+/** Hook public : statiques + base fusionnées par slug (override/masquage), repli statique. */
+export function useAllExperiences(): { experiences: ExperienceWithSlug[]; loading: boolean } {
+	const base = useMemo(staticExpWithSlug, []);
+	const [list, setList] = useState<ExperienceWithSlug[]>(base);
+	const [loading, setLoading] = useState<boolean>(isSupabaseConfigured);
+
+	useEffect(() => {
+		if (!isSupabaseConfigured || !supabase) return;
+		let cancelled = false;
+		(async () => {
+			try {
+				const db = await fetchDbExperiences();
+				if (cancelled) return;
+				const bySlug = new Map<string, ExperienceWithSlug>();
+				const order: string[] = [];
+				base.forEach((e) => {
+					bySlug.set(e.slug, e);
+					order.push(e.slug);
+				});
+				for (const d of db) {
+					if (d.hidden) {
+						bySlug.delete(d.slug);
+						continue;
+					}
+					if (!bySlug.has(d.slug)) order.push(d.slug);
+					bySlug.set(d.slug, d);
+				}
+				setList(order.filter((s) => bySlug.has(s)).map((s) => bySlug.get(s) as ExperienceWithSlug));
+			} catch {
+				/* garde les données statiques */
+			} finally {
+				if (!cancelled) setLoading(false);
+			}
+		})();
+		return () => {
+			cancelled = true;
+		};
+	}, [base]);
+
+	return { experiences: list, loading };
+}
+
+export interface ExperienceInput {
+	period: string;
+	roleFr: string;
+	roleEn: string;
+	company: string;
+	location?: string;
+	type: "work" | "education" | "freelance";
+	highlightsFr: string[];
+	highlightsEn: string[];
+	stack: string[];
+	sort?: number;
+}
+
+function toExpRow(input: ExperienceInput) {
+	return {
+		period: input.period,
+		role_fr: input.roleFr || null,
+		role_en: input.roleEn || null,
+		company: input.company,
+		location: input.location ?? null,
+		type: input.type,
+		highlights_fr: input.highlightsFr,
+		highlights_en: input.highlightsEn,
+		stack: input.stack,
+		sort: input.sort ?? 0,
+	};
+}
+
+export async function createExperience(input: ExperienceInput): Promise<void> {
+	await saveExperience(input, {});
+}
+
+export async function saveExperience(input: ExperienceInput, opts: { id?: string; slug?: string }): Promise<void> {
+	if (!supabase) throw new Error("Supabase non configuré");
+	if (opts.id) {
+		const { error } = await supabase.from("experiences").update(toExpRow(input)).eq("id", opts.id);
+		if (error) throw error;
+	} else {
+		const slug = opts.slug ?? slugify(`${input.company}-${input.period}`);
+		const { error } = await supabase.from("experiences").insert({ ...toExpRow(input), slug, hidden: false });
+		if (error) throw error;
+	}
+}
+
+export async function deleteExperienceRow(id: string): Promise<void> {
+	if (!supabase) throw new Error("Supabase non configuré");
+	const { error } = await supabase.from("experiences").delete().eq("id", id);
+	if (error) throw error;
+}
+
+function staticExpInputBySlug(slug: string): ExperienceInput | null {
+	const e = staticExpWithSlug().find((x) => x.slug === slug);
+	if (!e) return null;
+	return {
+		period: e.period,
+		roleFr: e.role?.fr ?? "",
+		roleEn: e.role?.en ?? "",
+		company: e.company,
+		location: e.location,
+		type: e.type,
+		highlightsFr: e.highlights?.fr ?? [],
+		highlightsEn: e.highlights?.en ?? [],
+		stack: e.stack ?? [],
+	};
+}
+
+export async function hideExperience(slug: string): Promise<void> {
+	if (!supabase) throw new Error("Supabase non configuré");
+	const { data } = await supabase.from("experiences").select("id").eq("slug", slug).maybeSingle();
+	if (data?.id) {
+		const { error } = await supabase.from("experiences").update({ hidden: true }).eq("id", data.id);
+		if (error) throw error;
+	} else {
+		const input = staticExpInputBySlug(slug);
+		if (!input) throw new Error("Expérience introuvable");
+		const { error } = await supabase.from("experiences").insert({ ...toExpRow(input), slug, hidden: true });
+		if (error) throw error;
+	}
+}
+
+export async function restoreExperience(slug: string): Promise<void> {
+	if (!supabase) throw new Error("Supabase non configuré");
+	const { error } = await supabase.from("experiences").update({ hidden: false }).eq("slug", slug);
+	if (error) throw error;
+}
+
+export interface AdminExperienceItem {
+	slug: string;
+	period: string;
+	role: string;
+	company: string;
+	type: string;
+	source: "static" | "db";
+	dbId?: string;
+	hidden: boolean;
+	overridden: boolean;
+}
+
+export async function listAdminExperiences(): Promise<AdminExperienceItem[]> {
+	const base = staticExpWithSlug();
+	const staticSlugs = new Set(base.map((e) => e.slug));
+	let rows: ExperienceRow[] = [];
+	if (supabase) {
+		const { data, error } = await supabase.from("experiences").select(EXP_COLS).order("sort", { ascending: true });
+		if (error) throw error;
+		rows = data as ExperienceRow[];
+	}
+	const dbBySlug = new Map(rows.map((r) => [r.slug, r]));
+
+	const items: AdminExperienceItem[] = base.map((e) => {
+		const d = dbBySlug.get(e.slug);
+		return {
+			slug: e.slug,
+			period: d?.period ?? e.period,
+			role: (d?.role_fr ?? e.role?.fr) || "",
+			company: d?.company ?? e.company,
+			type: d?.type ?? e.type,
+			source: "static",
+			dbId: d?.id,
+			hidden: d?.hidden ?? false,
+			overridden: Boolean(d),
+		};
+	});
+	rows
+		.filter((r) => !staticSlugs.has(r.slug))
+		.forEach((r) =>
+			items.push({
+				slug: r.slug,
+				period: r.period,
+				role: r.role_fr ?? "",
+				company: r.company,
+				type: r.type,
+				source: "db",
+				dbId: r.id,
+				hidden: r.hidden,
+				overridden: false,
+			}),
+		);
+	return items;
+}
+
+export interface EditableExperience extends ExperienceInput {
+	slug: string;
+	dbId?: string;
+}
+
+export async function getExperienceForEdit(slug: string): Promise<EditableExperience> {
+	let db: ExperienceRow | null = null;
+	if (supabase) {
+		const { data } = await supabase.from("experiences").select(EXP_COLS).eq("slug", slug).maybeSingle();
+		db = (data as ExperienceRow) ?? null;
+	}
+	const stat = staticExpWithSlug().find((e) => e.slug === slug);
+	return {
+		slug,
+		dbId: db?.id,
+		period: db?.period ?? stat?.period ?? "",
+		roleFr: db?.role_fr ?? stat?.role?.fr ?? "",
+		roleEn: db?.role_en ?? stat?.role?.en ?? "",
+		company: db?.company ?? stat?.company ?? "",
+		location: db?.location ?? stat?.location ?? "",
+		type: (db?.type ?? stat?.type ?? "work") as ExperienceInput["type"],
+		highlightsFr: db?.highlights_fr ?? stat?.highlights?.fr ?? [],
+		highlightsEn: db?.highlights_en ?? stat?.highlights?.en ?? [],
+		stack: db?.stack ?? stat?.stack ?? [],
+	};
 }
