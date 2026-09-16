@@ -562,7 +562,7 @@ export interface ExperienceRow {
 	role_en: string | null;
 	company: string;
 	location: string | null;
-	type: "work" | "education" | "freelance";
+	type: "work" | "internship" | "university" | "education" | "freelance";
 	highlights_fr: string[];
 	highlights_en: string[];
 	stack: string[];
@@ -654,7 +654,7 @@ export interface ExperienceInput {
 	roleEn: string;
 	company: string;
 	location?: string;
-	type: "work" | "education" | "freelance";
+	type: "work" | "internship" | "university" | "education" | "freelance";
 	highlightsFr: string[];
 	highlightsEn: string[];
 	stack: string[];

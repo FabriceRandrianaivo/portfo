@@ -149,6 +149,8 @@ export const dictionaries = {
 			"From first lines of PHP to leading teams on web, mobile and industrial-grade products.",
 		"experience.type.work": "Work",
 		"experience.type.freelance": "Freelance",
+		"experience.type.internship": "Internship",
+		"experience.type.university": "University",
 		"experience.type.education": "Education",
 
 		"contact.eyebrow": "Get in touch",
@@ -352,6 +354,8 @@ export const dictionaries = {
 			"Des premières lignes de PHP au pilotage d'équipes sur des produits web, mobile et industriels.",
 		"experience.type.work": "Salarié",
 		"experience.type.freelance": "Freelance",
+		"experience.type.internship": "Stage",
+		"experience.type.university": "Université",
 		"experience.type.education": "Études",
 
 		"contact.eyebrow": "Me contacter",

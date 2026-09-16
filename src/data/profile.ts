@@ -18,7 +18,7 @@ export interface ExperienceItem {
 	role: Localized;
 	company: string;
 	location?: string;
-	type: "work" | "education" | "freelance";
+	type: "work" | "internship" | "university" | "education" | "freelance";
 	highlights: LocalizedList;
 	stack?: string[];
 }
@@ -198,7 +198,7 @@ export const experiences: ExperienceItem[] = [
 		},
 		company: "Constellation Group",
 		location: "Remote",
-		type: "work",
+		type: "internship",
 		highlights: {
 			fr: [
 				"Conception et fine-tuning d'un pipeline NER & Topic Modeling (BERT, LDA)",
