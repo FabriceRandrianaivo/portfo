@@ -63,6 +63,25 @@ create table if not exists public.messages (
   created_at timestamptz not null default now()
 );
 
+-- Expériences / formations (parcours) — éditables via le back office.
+create table if not exists public.experiences (
+  id            uuid primary key default gen_random_uuid(),
+  slug          text unique not null,
+  period        text not null,
+  role_fr       text,
+  role_en       text,
+  company       text not null,
+  location      text,
+  type          text not null default 'work',   -- 'work' | 'education' | 'freelance'
+  highlights_fr text[] not null default '{}',
+  highlights_en text[] not null default '{}',
+  stack         text[] not null default '{}',
+  sort          int not null default 0,
+  hidden        boolean not null default false,
+  created_at    timestamptz not null default now(),
+  updated_at    timestamptz not null default now()
+);
+
 -- updated_at automatique sur projects
 create or replace function public.set_updated_at()
 returns trigger language plpgsql as $$
@@ -73,11 +92,24 @@ create trigger projects_set_updated_at
   before update on public.projects
   for each row execute function public.set_updated_at();
 
+drop trigger if exists experiences_set_updated_at on public.experiences;
+create trigger experiences_set_updated_at
+  before update on public.experiences
+  for each row execute function public.set_updated_at();
+
 -- 2) RLS (Row Level Security) --------------------------------
 alter table public.projects       enable row level security;
 alter table public.project_images enable row level security;
 alter table public.documents      enable row level security;
 alter table public.messages       enable row level security;
+alter table public.experiences    enable row level security;
+
+-- experiences : lecture PUBLIQUE, écriture réservée aux connectés
+drop policy if exists "experiences public read" on public.experiences;
+create policy "experiences public read" on public.experiences for select using (true);
+drop policy if exists "experiences auth write" on public.experiences;
+create policy "experiences auth write" on public.experiences for all
+  to authenticated using (true) with check (true);
 
 -- messages : INSERT public (formulaire), lecture/suppression réservées à l'admin
 drop policy if exists "messages public insert" on public.messages;

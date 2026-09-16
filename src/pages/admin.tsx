@@ -17,6 +17,7 @@ import {
 	X,
 	Inbox,
 	Mail,
+	Briefcase,
 } from "lucide-react";
 import { isSupabaseConfigured } from "../lib/supabase";
 import { useAuth, signIn, signOut } from "../lib/useAuth";
@@ -38,11 +39,19 @@ import {
 	signDocumentUrl,
 	listMessages,
 	deleteMessage,
+	listAdminExperiences,
+	getExperienceForEdit,
+	createExperience,
+	saveExperience,
+	hideExperience,
+	restoreExperience,
+	deleteExperienceRow,
 	type AdminProjectItem,
 	type ProjectWithSlug,
 	type ProjectImageRow,
 	type DocumentRow,
 	type MessageRow,
+	type AdminExperienceItem,
 } from "../lib/portfolioData";
 
 // ------- helpers UI -------
@@ -261,13 +270,14 @@ const LoginForm: React.FC = () => {
 // =====================================================================
 //  Dashboard
 // =====================================================================
-type Tab = "projects" | "photos" | "documents" | "messages";
+type Tab = "projects" | "experience" | "photos" | "documents" | "messages";
 
 const Dashboard: React.FC<{ email: string }> = ({ email }) => {
 	const [tab, setTab] = useState<Tab>("projects");
 
 	const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
 		{ id: "projects", label: "Projets", icon: <FolderPlus className="h-4 w-4" /> },
+		{ id: "experience", label: "Expérience", icon: <Briefcase className="h-4 w-4" /> },
 		{ id: "photos", label: "Photos", icon: <Images className="h-4 w-4" /> },
 		{ id: "documents", label: "Documents privés", icon: <FileLock2 className="h-4 w-4" /> },
 		{ id: "messages", label: "Messages", icon: <Inbox className="h-4 w-4" /> },
@@ -308,6 +318,7 @@ const Dashboard: React.FC<{ email: string }> = ({ email }) => {
 
 			<main className="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-8">
 				{tab === "projects" && <ProjectsPanel />}
+				{tab === "experience" && <ExperiencePanel />}
 				{tab === "photos" && <PhotosPanel />}
 				{tab === "documents" && <DocumentsPanel />}
 				{tab === "messages" && <MessagesPanel />}
@@ -883,6 +894,272 @@ const DocumentsPanel: React.FC = () => {
 					<Copy className="h-3.5 w-3.5" /> « Lien » copie une URL signée temporaire à envoyer à un
 					recruteur.
 				</p>
+			</div>
+		</div>
+	);
+};
+
+// ---------------------------------------------------------------------
+//  Onglet Expérience
+// ---------------------------------------------------------------------
+const emptyExp = {
+	period: "",
+	roleFr: "",
+	roleEn: "",
+	company: "",
+	location: "",
+	type: "work" as "work" | "education" | "freelance",
+	highlightsFr: "",
+	highlightsEn: "",
+	stack: "",
+};
+
+const expTypeLabel = (t: string) =>
+	t === "education" ? "Formation" : t === "freelance" ? "Freelance" : "Travail";
+
+const ExperiencePanel: React.FC = () => {
+	const [form, setForm] = useState({ ...emptyExp });
+	const [items, setItems] = useState<AdminExperienceItem[]>([]);
+	const [busy, setBusy] = useState(false);
+	const [msg, setMsg] = useState<string | null>(null);
+	const [editing, setEditing] = useState<{ dbId?: string; slug: string } | null>(null);
+	const { confirm, dialog } = useConfirm();
+
+	const refresh = () => listAdminExperiences().then(setItems).catch(() => setItems([]));
+	useEffect(() => {
+		refresh();
+	}, []);
+
+	const buildInput = () => ({
+		period: form.period,
+		roleFr: form.roleFr,
+		roleEn: form.roleEn,
+		company: form.company,
+		location: form.location || undefined,
+		type: form.type,
+		highlightsFr: lines(form.highlightsFr),
+		highlightsEn: lines(form.highlightsEn),
+		stack: csv(form.stack),
+	});
+
+	const submit = async (e: React.FormEvent) => {
+		e.preventDefault();
+		setBusy(true);
+		setMsg(null);
+		try {
+			if (editing) {
+				await saveExperience(buildInput(), { id: editing.dbId, slug: editing.slug });
+				setMsg("Expérience modifiée ✅");
+			} else {
+				await createExperience(buildInput());
+				setMsg("Expérience ajoutée ✅");
+			}
+			setForm({ ...emptyExp });
+			setEditing(null);
+			refresh();
+		} catch (err) {
+			setMsg(err instanceof Error ? err.message : "Erreur");
+		} finally {
+			setBusy(false);
+		}
+	};
+
+	const startEdit = async (it: AdminExperienceItem) => {
+		setMsg(null);
+		try {
+			const p = await getExperienceForEdit(it.slug);
+			setForm({
+				period: p.period,
+				roleFr: p.roleFr,
+				roleEn: p.roleEn,
+				company: p.company,
+				location: p.location ?? "",
+				type: p.type,
+				highlightsFr: p.highlightsFr.join("\n"),
+				highlightsEn: p.highlightsEn.join("\n"),
+				stack: p.stack.join(", "),
+			});
+			setEditing({ dbId: it.dbId, slug: it.slug });
+			window.scrollTo({ top: 0, behavior: "smooth" });
+		} catch (err) {
+			setMsg(err instanceof Error ? err.message : "Erreur");
+		}
+	};
+
+	const cancelEdit = () => {
+		setEditing(null);
+		setForm({ ...emptyExp });
+	};
+
+	const del = async (it: AdminExperienceItem) => {
+		const hard = it.source === "db";
+		const ok = await confirm({
+			title: hard ? `Supprimer « ${it.role || it.company} » ?` : `Masquer « ${it.role || it.company} » ?`,
+			message: hard
+				? "Cette suppression est définitive."
+				: "L'entrée sera retirée du parcours public (restaurable).",
+			confirmLabel: hard ? "Supprimer" : "Masquer",
+			danger: true,
+		});
+		if (!ok) return;
+		if (hard && it.dbId) await deleteExperienceRow(it.dbId);
+		else await hideExperience(it.slug);
+		refresh();
+	};
+
+	const restore = async (it: AdminExperienceItem) => {
+		await restoreExperience(it.slug);
+		refresh();
+	};
+
+	const set = (k: keyof typeof form, v: string) => setForm((f) => ({ ...f, [k]: v }));
+
+	return (
+		<div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+			{dialog}
+			<form onSubmit={submit} className={card}>
+				<div className="mb-4 flex items-center justify-between">
+					<h2 className="text-base font-bold">
+						{editing ? "Modifier l'expérience" : "Ajouter une expérience"}
+					</h2>
+					{editing && (
+						<button type="button" onClick={cancelEdit} className={btnGhost}>
+							<X className="h-3.5 w-3.5" /> Annuler
+						</button>
+					)}
+				</div>
+				<div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+					<div>
+						<label className={label}>Période *</label>
+						<input
+							required
+							value={form.period}
+							onChange={(e) => set("period", e.target.value)}
+							placeholder="2024 — 2025"
+							className={input}
+						/>
+					</div>
+					<div>
+						<label className={label}>Type</label>
+						<select value={form.type} onChange={(e) => set("type", e.target.value)} className={input}>
+							<option value="work">Travail</option>
+							<option value="education">Formation</option>
+							<option value="freelance">Freelance</option>
+						</select>
+					</div>
+					<div className="sm:col-span-2">
+						<label className={label}>Entreprise / École *</label>
+						<input required value={form.company} onChange={(e) => set("company", e.target.value)} className={input} />
+					</div>
+					<div className="sm:col-span-2">
+						<label className={label}>Lieu</label>
+						<input value={form.location} onChange={(e) => set("location", e.target.value)} className={input} />
+					</div>
+					<div className="sm:col-span-2">
+						<label className={label}>Rôle / Intitulé (FR)</label>
+						<input value={form.roleFr} onChange={(e) => set("roleFr", e.target.value)} className={input} />
+					</div>
+					<div className="sm:col-span-2">
+						<label className={label}>Rôle / Intitulé (EN)</label>
+						<input value={form.roleEn} onChange={(e) => set("roleEn", e.target.value)} className={input} />
+					</div>
+					<div className="sm:col-span-2">
+						<label className={label}>Points clés FR (1 par ligne)</label>
+						<textarea
+							rows={3}
+							value={form.highlightsFr}
+							onChange={(e) => set("highlightsFr", e.target.value)}
+							className={input}
+						/>
+					</div>
+					<div className="sm:col-span-2">
+						<label className={label}>Points clés EN (1 par ligne)</label>
+						<textarea
+							rows={3}
+							value={form.highlightsEn}
+							onChange={(e) => set("highlightsEn", e.target.value)}
+							className={input}
+						/>
+					</div>
+					<div className="sm:col-span-2">
+						<label className={label}>Stack / technos (virgules)</label>
+						<input
+							value={form.stack}
+							onChange={(e) => set("stack", e.target.value)}
+							placeholder="React, Node.js, FastAPI"
+							className={input}
+						/>
+					</div>
+				</div>
+				{msg && <p className="mt-3 text-sm text-charcoal/70">{msg}</p>}
+				<button type="submit" disabled={busy} className={`${btn} mt-4`}>
+					{busy ? (
+						<Loader2 className="h-4 w-4 animate-spin" />
+					) : editing ? (
+						<Pencil className="h-4 w-4" />
+					) : (
+						<Briefcase className="h-4 w-4" />
+					)}
+					{editing ? "Enregistrer les modifications" : "Ajouter l'expérience"}
+				</button>
+			</form>
+
+			<div className={card}>
+				<h2 className="mb-1 text-base font-bold">Parcours ({items.length})</h2>
+				<p className="mb-4 text-xs text-charcoal/50">
+					« Existant » = déjà en place (modifiable / masquable). « Ajouté » = créé ici.
+				</p>
+				<ul className="max-h-[60vh] space-y-2 overflow-y-auto pr-1">
+					{items.map((it) => (
+						<li
+							key={it.slug}
+							className={`flex items-center justify-between gap-2 rounded-lg border border-charcoal/10 px-3 py-2 ${
+								it.hidden ? "bg-charcoal/[0.03] opacity-70" : ""
+							}`}
+						>
+							<div className="min-w-0">
+								<p className="truncate text-sm font-semibold">{it.role || it.company}</p>
+								<p className="truncate text-xs text-charcoal/50">
+									{it.company} · {it.period}
+								</p>
+								<div className="mt-1 flex flex-wrap gap-1">
+									<Badge tone={it.source === "db" ? "lime" : "muted"}>
+										{it.source === "db" ? "Ajouté" : "Existant"}
+									</Badge>
+									<Badge>{expTypeLabel(it.type)}</Badge>
+									{it.overridden && it.source === "static" && !it.hidden && <Badge>Modifié</Badge>}
+									{it.hidden && <Badge tone="red">Masqué</Badge>}
+								</div>
+							</div>
+							<div className="flex shrink-0 items-center gap-1.5">
+								<button
+									onClick={() => startEdit(it)}
+									title="Modifier"
+									className="rounded p-1.5 text-charcoal/50 transition hover:bg-charcoal/5 hover:text-lime"
+								>
+									<Pencil className="h-4 w-4" />
+								</button>
+								{it.hidden ? (
+									<button
+										onClick={() => restore(it)}
+										title="Restaurer"
+										className="rounded p-1.5 text-charcoal/50 transition hover:bg-charcoal/5 hover:text-lime"
+									>
+										<RotateCcw className="h-4 w-4" />
+									</button>
+								) : (
+									<button
+										onClick={() => del(it)}
+										title={it.source === "db" ? "Supprimer" : "Masquer"}
+										className="rounded p-1.5 text-charcoal/40 transition hover:bg-charcoal/5 hover:text-red-600"
+									>
+										{it.source === "db" ? <Trash2 className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+									</button>
+								)}
+							</div>
+						</li>
+					))}
+				</ul>
 			</div>
 		</div>
 	);

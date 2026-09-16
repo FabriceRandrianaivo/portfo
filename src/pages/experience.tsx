@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Briefcase, GraduationCap, Sparkles } from "lucide-react";
-import { experiences } from "../data/profile";
+import { useAllExperiences } from "@/lib/portfolioData";
 import { useLang } from "@/lib/LanguageContext";
 import { TranslationKey } from "@/lib/i18n";
 
@@ -19,6 +19,7 @@ const typeMeta = {
 
 const Experience: React.FC = () => {
 	const { t, lang } = useLang();
+	const { experiences } = useAllExperiences();
 
 	return (
 		<div className="relative min-h-screen bg-cream pb-24 pt-28 text-charcoal">
@@ -49,7 +50,7 @@ const Experience: React.FC = () => {
 							const meta = typeMeta[exp.type];
 							return (
 								<motion.li
-									key={`${exp.role.fr}-${exp.period}`}
+									key={exp.slug ?? `${exp.company}-${exp.period}`}
 									initial={{ opacity: 0, y: 24 }}
 									whileInView={{ opacity: 1, y: 0 }}
 									viewport={{ once: true, margin: "-80px" }}
