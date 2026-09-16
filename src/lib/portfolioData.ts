@@ -537,6 +537,20 @@ export interface ExperienceWithSlug extends ExperienceItem {
 	fromDb?: boolean;
 	dbId?: string;
 	hidden?: boolean;
+	sort?: number;
+}
+
+/** Dernière année trouvée dans une période ("2024 — 2025" → 2025). */
+function periodEndYear(period: string): number {
+	const m = period.match(/\d{4}/g);
+	return m ? Math.max(...m.map(Number)) : 0;
+}
+
+/** Tri : champ "sort" (croissant) prioritaire, puis chronologie inverse (plus récent en haut). */
+function sortExperiences<T extends { period: string; sort?: number }>(list: T[]): T[] {
+	return [...list].sort(
+		(a, b) => (a.sort ?? 0) - (b.sort ?? 0) || periodEndYear(b.period) - periodEndYear(a.period),
+	);
 }
 
 export interface ExperienceRow {
@@ -572,6 +586,7 @@ function mapExpRow(r: ExperienceRow): ExperienceWithSlug {
 		fromDb: true,
 		dbId: r.id,
 		hidden: r.hidden,
+		sort: r.sort,
 		period: r.period,
 		role: { fr: r.role_fr ?? "", en: r.role_en ?? "" },
 		company: r.company,
@@ -591,7 +606,7 @@ export async function fetchDbExperiences(): Promise<ExperienceWithSlug[]> {
 
 /** Hook public : statiques + base fusionnées par slug (override/masquage), repli statique. */
 export function useAllExperiences(): { experiences: ExperienceWithSlug[]; loading: boolean } {
-	const base = useMemo(staticExpWithSlug, []);
+	const base = useMemo(() => sortExperiences(staticExpWithSlug()), []);
 	const [list, setList] = useState<ExperienceWithSlug[]>(base);
 	const [loading, setLoading] = useState<boolean>(isSupabaseConfigured);
 
@@ -616,7 +631,8 @@ export function useAllExperiences(): { experiences: ExperienceWithSlug[]; loadin
 					if (!bySlug.has(d.slug)) order.push(d.slug);
 					bySlug.set(d.slug, d);
 				}
-				setList(order.filter((s) => bySlug.has(s)).map((s) => bySlug.get(s) as ExperienceWithSlug));
+				const merged = order.filter((s) => bySlug.has(s)).map((s) => bySlug.get(s) as ExperienceWithSlug);
+				setList(sortExperiences(merged));
 			} catch {
 				/* garde les données statiques */
 			} finally {
@@ -727,6 +743,7 @@ export interface AdminExperienceItem {
 	dbId?: string;
 	hidden: boolean;
 	overridden: boolean;
+	sort: number;
 }
 
 export async function listAdminExperiences(): Promise<AdminExperienceItem[]> {
@@ -734,9 +751,17 @@ export async function listAdminExperiences(): Promise<AdminExperienceItem[]> {
 	const staticSlugs = new Set(base.map((e) => e.slug));
 	let rows: ExperienceRow[] = [];
 	if (supabase) {
-		const { data, error } = await supabase.from("experiences").select(EXP_COLS).order("sort", { ascending: true });
-		if (error) throw error;
-		rows = data as ExperienceRow[];
+		// tolérant : si la table n'existe pas encore, on affiche quand même le parcours statique
+		try {
+			const { data, error } = await supabase
+				.from("experiences")
+				.select(EXP_COLS)
+				.order("sort", { ascending: true });
+			if (error) throw error;
+			rows = data as ExperienceRow[];
+		} catch {
+			rows = [];
+		}
 	}
 	const dbBySlug = new Map(rows.map((r) => [r.slug, r]));
 
@@ -752,6 +777,7 @@ export async function listAdminExperiences(): Promise<AdminExperienceItem[]> {
 			dbId: d?.id,
 			hidden: d?.hidden ?? false,
 			overridden: Boolean(d),
+			sort: d?.sort ?? 0,
 		};
 	});
 	rows
@@ -767,9 +793,10 @@ export async function listAdminExperiences(): Promise<AdminExperienceItem[]> {
 				dbId: r.id,
 				hidden: r.hidden,
 				overridden: false,
+				sort: r.sort,
 			}),
 		);
-	return items;
+	return sortExperiences(items);
 }
 
 export interface EditableExperience extends ExperienceInput {
@@ -796,5 +823,6 @@ export async function getExperienceForEdit(slug: string): Promise<EditableExperi
 		highlightsFr: db?.highlights_fr ?? stat?.highlights?.fr ?? [],
 		highlightsEn: db?.highlights_en ?? stat?.highlights?.en ?? [],
 		stack: db?.stack ?? stat?.stack ?? [],
+		sort: db?.sort ?? 0,
 	};
 }
