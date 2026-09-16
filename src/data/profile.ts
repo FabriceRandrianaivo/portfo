@@ -143,6 +143,31 @@ export const skillCategories: SkillCategory[] = [
 
 export const experiences: ExperienceItem[] = [
 	{
+		period: "Oct. 2025 — Sept. 2026",
+		role: {
+			fr: "Développeur Fullstack (CDD)",
+			en: "Fullstack Developer (fixed-term)",
+		},
+		company: "Mission Citoyenne — LeChatSur.fr",
+		location: "Antananarivo, Madagascar",
+		type: "work",
+		highlights: {
+			fr: [
+				"Conception, développement, maintenance et évolution de sites et applications web",
+				"Intégration d'interfaces et de fonctionnalités",
+				"Optimisation des performances et de la responsivité",
+				"Résolution de problématiques techniques liées aux projets de l'entreprise",
+			],
+			en: [
+				"Design, development, maintenance and evolution of websites and web applications",
+				"Integration of interfaces and features",
+				"Performance and responsiveness optimization",
+				"Solving technical challenges across the company's projects",
+			],
+		},
+		stack: ["Nuxt 3", "TypeScript", "Tailwind CSS", "MongoDB", "Node.js"],
+	},
+	{
 		period: "2024",
 		role: {
 			fr: "Développeur Full-Stack (poste) & Data Scientist (stage)",
