@@ -191,6 +191,29 @@ export const experiences: ExperienceItem[] = [
 		stack: ["React", "Next.js", "Python", "BERT", "LDA", "FastAPI"],
 	},
 	{
+		period: "2024 (stage)",
+		role: {
+			fr: "Data Scientist (stage)",
+			en: "Data Scientist (intern)",
+		},
+		company: "Constellation Group",
+		location: "Remote",
+		type: "work",
+		highlights: {
+			fr: [
+				"Conception et fine-tuning d'un pipeline NER & Topic Modeling (BERT, LDA)",
+				"Exposition des modèles NLP via une API FastAPI",
+				"Prétraitement des jeux de données et optimisation des pipelines NLP",
+			],
+			en: [
+				"Designed and fine-tuned an NER & Topic Modeling pipeline (BERT, LDA)",
+				"Exposed the NLP models through a FastAPI API",
+				"Preprocessed datasets and optimized NLP pipelines",
+			],
+		},
+		stack: ["Python", "BERT", "LDA", "FastAPI", "NLP", "Jupyter"],
+	},
+	{
 		period: "2024 — 2025",
 		role: {
 			fr: "Master 1 — Informatique de Gestion, Génie Logiciel & IA (IGGLIA)",
