@@ -912,6 +912,7 @@ const emptyExp = {
 	highlightsFr: "",
 	highlightsEn: "",
 	stack: "",
+	sort: 0,
 };
 
 const expTypeLabel = (t: string) =>
@@ -940,6 +941,7 @@ const ExperiencePanel: React.FC = () => {
 		highlightsFr: lines(form.highlightsFr),
 		highlightsEn: lines(form.highlightsEn),
 		stack: csv(form.stack),
+		sort: Number(form.sort) || 0,
 	});
 
 	const submit = async (e: React.FormEvent) => {
@@ -978,6 +980,7 @@ const ExperiencePanel: React.FC = () => {
 				highlightsFr: p.highlightsFr.join("\n"),
 				highlightsEn: p.highlightsEn.join("\n"),
 				stack: p.stack.join(", "),
+				sort: p.sort ?? 0,
 			});
 			setEditing({ dbId: it.dbId, slug: it.slug });
 			window.scrollTo({ top: 0, behavior: "smooth" });
@@ -1012,7 +1015,7 @@ const ExperiencePanel: React.FC = () => {
 		refresh();
 	};
 
-	const set = (k: keyof typeof form, v: string) => setForm((f) => ({ ...f, [k]: v }));
+	const set = (k: keyof typeof form, v: string | number) => setForm((f) => ({ ...f, [k]: v }));
 
 	return (
 		<div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
@@ -1046,6 +1049,18 @@ const ExperiencePanel: React.FC = () => {
 							<option value="education">Formation</option>
 							<option value="freelance">Freelance</option>
 						</select>
+					</div>
+					<div className="sm:col-span-2">
+						<label className={label}>Ordre d'affichage (0 = automatique par année)</label>
+						<input
+							type="number"
+							value={form.sort}
+							onChange={(e) => set("sort", e.target.value)}
+							className={input}
+						/>
+						<p className="mt-1 text-xs text-charcoal/45">
+							Laisse 0 pour un tri chronologique auto. Mets 1, 2, 3… pour forcer un ordre précis (1 en haut).
+						</p>
 					</div>
 					<div className="sm:col-span-2">
 						<label className={label}>Entreprise / École *</label>
