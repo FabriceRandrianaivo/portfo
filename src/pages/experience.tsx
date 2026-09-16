@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Briefcase, GraduationCap, Sparkles } from "lucide-react";
+import { Briefcase, GraduationCap, Sparkles, Sprout, School } from "lucide-react";
 import { useAllExperiences } from "@/lib/portfolioData";
 import { useLang } from "@/lib/LanguageContext";
 import { TranslationKey } from "@/lib/i18n";
@@ -10,6 +10,14 @@ const typeMeta = {
 	freelance: {
 		icon: <Sparkles className="h-3.5 w-3.5" />,
 		key: "experience.type.freelance" as TranslationKey,
+	},
+	internship: {
+		icon: <Sprout className="h-3.5 w-3.5" />,
+		key: "experience.type.internship" as TranslationKey,
+	},
+	university: {
+		icon: <School className="h-3.5 w-3.5" />,
+		key: "experience.type.university" as TranslationKey,
 	},
 	education: {
 		icon: <GraduationCap className="h-3.5 w-3.5" />,
@@ -47,7 +55,7 @@ const Experience: React.FC = () => {
 
 					<ul className="space-y-8">
 						{experiences.map((exp, i) => {
-							const meta = typeMeta[exp.type];
+							const meta = typeMeta[exp.type] ?? typeMeta.work;
 							return (
 								<motion.li
 									key={exp.slug ?? `${exp.company}-${exp.period}`}

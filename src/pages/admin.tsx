@@ -908,7 +908,7 @@ const emptyExp = {
 	roleEn: "",
 	company: "",
 	location: "",
-	type: "work" as "work" | "education" | "freelance",
+	type: "work" as "work" | "internship" | "university" | "education" | "freelance",
 	highlightsFr: "",
 	highlightsEn: "",
 	stack: "",
@@ -916,7 +916,15 @@ const emptyExp = {
 };
 
 const expTypeLabel = (t: string) =>
-	t === "education" ? "Formation" : t === "freelance" ? "Freelance" : "Travail";
+	t === "education"
+		? "Formation"
+		: t === "freelance"
+			? "Freelance"
+			: t === "internship"
+				? "Stage"
+				: t === "university"
+					? "Université"
+					: "Travail";
 
 const ExperiencePanel: React.FC = () => {
 	const [form, setForm] = useState({ ...emptyExp });
@@ -1046,6 +1054,8 @@ const ExperiencePanel: React.FC = () => {
 						<label className={label}>Type</label>
 						<select value={form.type} onChange={(e) => set("type", e.target.value)} className={input}>
 							<option value="work">Travail</option>
+							<option value="internship">Stage</option>
+							<option value="university">Université</option>
 							<option value="education">Formation</option>
 							<option value="freelance">Freelance</option>
 						</select>
