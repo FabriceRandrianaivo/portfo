@@ -236,7 +236,8 @@ export async function saveProject(input: ProjectInput, opts: { id?: string; slug
 		if (error) throw error;
 	} else {
 		const slug = opts.slug ?? slugify(input.name);
-		const { error } = await supabase.from("projects").insert({ ...toRow(input), slug, hidden: false });
+		// upsert : insère si nouveau, met à jour si le slug existe déjà (évite l'erreur de doublon)
+		const { error } = await supabase.from("projects").upsert({ ...toRow(input), slug }, { onConflict: "slug" });
 		if (error) throw error;
 	}
 }
@@ -686,7 +687,8 @@ export async function saveExperience(input: ExperienceInput, opts: { id?: string
 		if (error) throw error;
 	} else {
 		const slug = opts.slug ?? slugify(`${input.company}-${input.period}`);
-		const { error } = await supabase.from("experiences").insert({ ...toExpRow(input), slug, hidden: false });
+		// upsert : insère si nouveau, met à jour si le slug existe déjà (évite l'erreur de doublon)
+		const { error } = await supabase.from("experiences").upsert({ ...toExpRow(input), slug }, { onConflict: "slug" });
 		if (error) throw error;
 	}
 }
