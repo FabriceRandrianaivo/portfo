@@ -1,0 +1,22 @@
+name: Supabase keep-alive
+
+# Empêche la mise en pause du projet Supabase (plan gratuit : pause après ~7j d'inactivité).
+# Ping automatique tous les 3 jours + déclenchement manuel possible.
+
+on:
+  schedule:
+    - cron: "0 6 */3 * *" # tous les 3 jours à 06:00 UTC
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping de la base Supabase
+        run: |
+          curl -fsS --max-time 30 \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/projects?select=id&limit=1" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -o /dev/null
+          echo "Supabase ping OK — projet maintenu actif."
