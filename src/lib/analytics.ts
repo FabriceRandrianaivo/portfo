@@ -11,7 +11,11 @@ declare global {
 	}
 }
 
-const GA_ID = import.meta.env.VITE_GA_ID as string | undefined;
+// ID GA4 : variable d'env prioritaire, sinon valeur par défaut EN PRODUCTION uniquement
+// (ainsi le trafic localhost/dev n'est jamais compté).
+const GA_ID =
+	(import.meta.env.VITE_GA_ID as string | undefined) ||
+	(import.meta.env.PROD ? "G-4XN9Q0E8ZN" : undefined);
 
 export const isAnalyticsEnabled = Boolean(GA_ID);
 
